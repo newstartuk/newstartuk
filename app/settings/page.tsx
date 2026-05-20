@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { getUser, getArrivalProfile, getReminderPrefs, setReminderPrefs, clearAllData } from "@/lib/utils";
 import type { ReminderPrefs, ArrivalProfile } from "@/types";
 import { User, Bell, Trash2, CheckCircle, AlertCircle } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 import Navigation from "@/components/Navigation";
 
-const DISCLAIMER = "Settings and preferences are stored locally on this device. Reminders are not currently sent by email.";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -115,8 +115,8 @@ export default function SettingsPage() {
               {saved ? <><CheckCircle className="w-4 h-4" /> Saved</> : "Save preferences"}
             </button>
           </div>
-          <div className="disclaimer-box mt-4">
-            <p>{DISCLAIMER}</p>
+          <div className="mt-4">
+            <Disclaimer text="Settings and preferences are stored locally on this device. Reminders are not currently sent by email." type="general" />
           </div>
         </div>
 

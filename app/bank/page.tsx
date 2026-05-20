@@ -1,6 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
-import { Shield, Building2, CreditCard, CheckCircle, AlertTriangle, ExternalLink, Phone } from "lucide-react";
+import { Building2, CreditCard, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 
 const UK_BANKS = [
   { name: "Monzo", logo: "💳", desc: "Digital bank — easy to open, great app, no branch needed", goodFor: "Quick setup, international students, mobile-first", score: 9, url: "https://monzo.com" },
@@ -199,10 +200,7 @@ export default function BankPage() {
           </p>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>NewStart UK provides general banking guidance only and does not provide financial, legal, or immigration advice. Bank products, fees, and availability may change. Always verify directly with the bank.</p>
-        </div>
+        <Disclaimer type="financial" />
       </div>
     </Navigation>
   );

@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { getDocHelperResponse, getAvailableDocTypes } from "@/lib/doc-helper-responses";
 import type { DocType } from "@/types";
-import { Bot, Shield, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Bot, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 import Navigation from "@/components/Navigation";
 
 const DISCLAIMER =
@@ -49,11 +50,7 @@ export default function DocumentHelperPage() {
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <div className="disclaimer-box flex items-start gap-2">
-          <Shield className="w-4 h-4 text-muted shrink-0 mt-0.5" />
-          <p>{DISCLAIMER}</p>
-        </div>
+        <Disclaimer type="legal" />
 
         {/* Type selector */}
         <div className="card">
@@ -167,10 +164,7 @@ export default function DocumentHelperPage() {
               </div>
             )}
 
-            <div className="disclaimer-box">
-              <p className="font-semibold text-navy mb-1">Remember</p>
-              <p>{DISCLAIMER}</p>
-            </div>
+            <Disclaimer type="legal" />
           </div>
         )}
       </div>

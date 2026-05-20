@@ -15,6 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import Disclaimer from "@/components/Disclaimer";
 
 export default function TaskDetailPage() {
   const params = useParams();
@@ -194,11 +195,7 @@ export default function TaskDetailPage() {
           </Link>
         )}
 
-        {/* Disclaimer */}
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>NewStart UK provides general settlement guidance, checklist support, document explanation, and signposting. We do not provide legal, immigration, financial, tax, medical, or housing advice. For official or regulated matters, please use official sources or speak to a qualified professional.</p>
-        </div>
+        <Disclaimer text="NewStart UK provides general settlement guidance, checklist support, document explanation, and signposting. We do not provide legal, immigration, financial, tax, medical, or housing advice. For official or regulated matters, please use official sources or speak to a qualified professional." type="general" />
       </div>
     </Navigation>
   );

@@ -1,6 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
 import { Shield, Phone, AlertTriangle, MapPin, ExternalLink } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 
 export default function EmergencyPage() {
   return (
@@ -140,10 +141,7 @@ export default function EmergencyPage() {
           </div>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>NewStart UK provides general safety information. For emergencies, always contact the emergency services directly. This page is not monitored in real time.</p>
-        </div>
+        <Disclaimer type="general" />
       </div>
     </Navigation>
   );

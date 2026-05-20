@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createUser, setUser, getUser } from "@/lib/utils";
+import Disclaimer from "@/components/Disclaimer";
 import { AlertCircle } from "lucide-react";
 
 const DISCLAIMER =
@@ -59,10 +60,7 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>{DISCLAIMER}</p>
-        </div>
+        <Disclaimer type="general" />
 
         <form onSubmit={handleSubmit} className="card space-y-4">
           {error && (

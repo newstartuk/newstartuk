@@ -13,6 +13,7 @@ import {
   Check,
   Star,
 } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 
 const FEATURES = [
   {
@@ -66,8 +67,6 @@ const HOW_IT_WORKS = [
   { num: "04", title: "Settle in with confidence", desc: "Avoid common mistakes, stay safe, and build your UK life." },
 ];
 
-const DISCLAIMER =
-  "NewStart UK provides general settlement guidance, checklist support, document explanation, and signposting. We do not provide legal, immigration, financial, tax, medical, or housing advice. For official or regulated matters, please use official sources or speak to a qualified professional.";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -230,9 +229,8 @@ export default function LandingPage() {
       {/* Disclaimer */}
       <footer className="border-t border-border py-8">
         <div className="max-w-6xl mx-auto px-4 space-y-4">
-          <div className="disclaimer-box max-w-3xl mx-auto text-center">
-            <p className="font-semibold text-navy mb-1">Important disclaimer</p>
-            <p>{DISCLAIMER}</p>
+          <div className="max-w-3xl mx-auto">
+            <Disclaimer type="general" />
           </div>
           <div className="flex flex-wrap gap-4 justify-center text-xs text-muted">
             <Link href="/guides" className="hover:text-primary">Guidance library</Link>

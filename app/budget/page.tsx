@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
+import Disclaimer from "@/components/Disclaimer";
 import { getArrivalProfile } from "@/lib/utils";
 import type { BudgetItem } from "@/types";
 import {
@@ -296,10 +297,7 @@ export default function BudgetPage() {
           </p>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>NewStart UK provides general budgeting guidance only and does not provide financial advice. Budget figures are illustrative. Consult a qualified financial advisor for personal financial planning.</p>
-        </div>
+        <Disclaimer type="financial" />
       </div>
     </Navigation>
   );

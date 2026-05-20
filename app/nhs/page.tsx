@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
-import { Shield, Phone, MapPin, Clock, CheckCircle, AlertTriangle, ExternalLink, ArrowRight } from "lucide-react";
+import { Shield, Phone, MapPin, Clock, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 
 const GP_SEARCH_URL = "https://www.nhs.uk/service-search/find-a-guy-s-or-trivial";
 
@@ -217,10 +218,7 @@ export default function NHSPage() {
           </p>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>NewStart UK provides general settlement guidance only and does not provide medical or health advice. Always consult the NHS directly or a qualified healthcare professional for health-related matters.</p>
-        </div>
+        <Disclaimer type="medical" />
       </div>
     </Navigation>
   );

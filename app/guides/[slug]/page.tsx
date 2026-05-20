@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { GUIDANCE_PAGES } from "@/lib/guidance-data";
 import { SEED_TASKS } from "@/lib/seed-data";
-import { ChevronLeft, AlertTriangle, ExternalLink, ArrowRight } from "lucide-react";
+import { ChevronLeft, AlertTriangle, ArrowRight } from "lucide-react";
+import Disclaimer from "@/components/Disclaimer";
 import Navigation from "@/components/Navigation";
 
 export default function GuideArticlePage() {
@@ -161,11 +162,7 @@ export default function GuideArticlePage() {
           </div>
         )}
 
-        {/* Disclaimer */}
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">Disclaimer</p>
-          <p>{guide.disclaimer}</p>
-        </div>
+        <Disclaimer text={guide.disclaimer} type="general" />
       </div>
     </Navigation>
   );

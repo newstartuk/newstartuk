@@ -36,16 +36,36 @@ function safeSet<T>(key: string, value: T): void {
 }
 
 // ─── Auth / User ─────────────────────────────────────────────────────────────
+// Cookie helpers for middleware-based route protection
+function setSessionCookie(userId: string, isAdmin: boolean): void {
+  if (typeof document === "undefined") return;
+  const expires = new Date();
+  expires.setDate(expires.getDate() + 30);
+  document.cookie = `nsk_session=${encodeURIComponent(userId)}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+  document.cookie = `nsk_is_admin=${isAdmin ? "true" : "false"}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+}
+
+function clearSessionCookie(): void {
+  if (typeof document === "undefined") return;
+  document.cookie = "nsk_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "nsk_is_admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+}
+
 export function getUser(): User | null {
   return safeGet<User | null>(KEYS.USER, null);
 }
 
 export function setUser(user: User): void {
   safeSet(KEYS.USER, user);
+  // Sync session cookie for middleware-based route guards
+  // Admin emails: simple MVP rule — emails starting with 'admin@' are admins
+  const isAdmin = user.email.toLowerCase().startsWith("admin@");
+  setSessionCookie(user.id, isAdmin);
 }
 
 export function clearUser(): void {
   if (typeof window !== "undefined") localStorage.removeItem(KEYS.USER);
+  clearSessionCookie();
 }
 
 export function hashPassword(password: string): string {
@@ -139,6 +159,7 @@ export function addSupportTicket(ticket: SupportTicket): void {
 export function clearAllData(): void {
   if (typeof window === "undefined") return;
   Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
+  clearSessionCookie();
 }
 
 // ─── Utilities ────────────────────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChevronLeft, Shield } from "lucide-react";
 import { GUIDANCE_PAGES } from "@/lib/guidance-data";
 import Navigation from "@/components/Navigation";
+import Disclaimer from "@/components/Disclaimer";
 
 const CATEGORY_COLORS: Record<string, string> = {
   Documents: "text-blue-600 bg-blue-50 border-blue-200",
@@ -60,10 +61,7 @@ export default function AdminGuidesPage() {
           </table>
         </div>
 
-        <div className="disclaimer-box">
-          <p className="font-semibold text-navy mb-1">MVP note</p>
-          <p>Full guide editor (create, edit, publish) will be implemented in Sprint 5. Currently, guides are managed by editing <code className="bg-civic-100 px-1 rounded">lib/guidance-data.ts</code> directly. Set up Supabase and integrate it in Sprint 5.</p>
-        </div>
+        <Disclaimer text="Full guide editor (create, edit, publish) will be implemented in Sprint 5. Currently, guides are managed by editing lib/guidance-data.ts directly. Set up Supabase and integrate it in Sprint 5." type="general" />
       </div>
     </Navigation>
   );
