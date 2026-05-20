@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Navigation from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { getUser, getArrivalProfile, getUserTasks } from "@/lib/utils";
 import { calculateReadinessScore } from "@/lib/readiness-score";

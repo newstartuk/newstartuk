@@ -67,6 +67,7 @@ export function createUser(name: string, email: string, password: string): User 
     email,
     passwordHash: hashPassword(password),
     createdAt: new Date().toISOString(),
+    profileCompleted: false,
   };
 }
 

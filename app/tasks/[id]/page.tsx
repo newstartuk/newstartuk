@@ -82,20 +82,20 @@ export default function TaskDetailPage() {
           <p className="text-xs text-muted mb-3 uppercase tracking-wide font-semibold">Mark your progress</p>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { value: "not_started", label: "Not started", icon: Circle, color: "text-civic-300", bg: "hover:bg-civic-50" },
-              { value: "in_progress", label: "In progress", icon: Clock, color: "text-amber-500", bg: "hover:bg-amber-50" },
-              { value: "complete", label: "Complete", icon: CheckCircle, color: "text-primary", bg: "hover:bg-teal-50" },
-            ].map(({ value, label, icon: Icon, color }) => (
+              { value: "not_started", label: "Not started", icon: Circle, active: false },
+              { value: "in_progress", label: "In progress", icon: Clock, active: true },
+              { value: "complete", label: "Complete", icon: CheckCircle, active: true },
+            ].map(({ value, label, icon: Icon, active }) => (
               <button
                 key={value}
                 onClick={() => update(value as TaskStatus)}
-                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${bg} ${
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
                   status === value
-                    ? `border-current ${color} bg-${color.replace("text-", "bg-")}/10`
-                    : "border-border text-muted hover:border-civic-300"
+                    ? active ? "border-primary bg-teal-50 text-primary" : "border-civic-200 bg-civic-50 text-civic-300"
+                    : "border-border text-muted hover:border-primary/40"
                 }`}
               >
-                <Icon className={`w-6 h-6 ${status === value ? color : "text-civic-300"}`} />
+                <Icon className={`w-6 h-6 ${status === value ? (active ? "text-primary" : "text-civic-300") : "text-civic-300"}`} />
                 <span className="text-xs font-medium">{label}</span>
               </button>
             ))}

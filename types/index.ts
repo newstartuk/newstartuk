@@ -5,6 +5,7 @@ export interface User {
   email: string;
   passwordHash: string;
   createdAt: string;
+  profileCompleted: boolean;
 }
 
 // ===== Arrival Profile =====
@@ -83,7 +84,10 @@ export type GuidanceCategory =
   | "University"
   | "Work"
   | "Safety"
-  | "Local Life";
+  | "Local Life"
+  | "Local Admin"
+  | "Growth"
+  | "Transport";
 
 export interface GuidanceArticle {
   slug: string;
@@ -159,4 +163,15 @@ export interface AdminStats {
   totalUsers: number;
   onboardingCompletion: number;
   taskCompletionRate: number;
+}
+
+
+// ===== Budget =====
+export interface BudgetItem {
+  id: string;
+  label: string;
+  amount: number;
+  category: string;
+  type: 'income' | 'expense' | 'savings';
+  color?: string;
 }

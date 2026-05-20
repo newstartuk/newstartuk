@@ -15,15 +15,21 @@ import {
   X,
   Menu,
   ChevronRight,
+  Building2,
+  TrendingUp,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/checklist", label: "My Checklist", icon: CheckSquare },
+  { href: "/budget", label: "Budget Planner", icon: TrendingUp },
   { href: "/guides", label: "Guidance", icon: BookOpen },
   { href: "/document-helper", label: "Document Helper", icon: Bot },
-  { href: "/support", label: "Support", icon: LifeBuoy },
+  { href: "/nhs", label: "NHS Guide", icon: Shield },
+  { href: "/bank", label: "Banking", icon: Building2 },
+  { href: "/emergency", label: "Emergency Contacts", icon: Shield },
   { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/support", label: "Support", icon: LifeBuoy },
 ];
 
 export default function Navigation({ children }: { children: React.ReactNode }) {
