@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Note: This is a Next.js Edge middleware. localStorage is browser-only,
-// so server-side auth checks rely on a "nsk_session" cookie (set on login/signup).
-// In MVP, we set this client-side. The middleware checks its presence as a
-// lightweight gate; full token verification will be added when backend lands.
-
-const PROTECTED_ROUTES = [
+// Protected routes require a valid session cookie
+const PROTECTED_PATHS = [
   "/dashboard",
   "/checklist",
   "/budget",
@@ -16,27 +12,38 @@ const PROTECTED_ROUTES = [
   "/admin",
 ];
 
-const ADMIN_ROUTES = ["/admin"];
+// Routes only accessible to admin users
+const ADMIN_PATHS = ["/admin"];
+
+function isProtected(path: string): boolean {
+  return PROTECTED_PATHS.some((p) => path === p || path.startsWith(p + "/"));
+}
+
+function isAdmin(path: string): boolean {
+  return ADMIN_PATHS.some((p) => path === p || path.startsWith(p + "/"));
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip Next.js internals (redundant with matcher but belt-and-suspenders)
+  if (pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+    return NextResponse.next();
+  }
+
   const session = request.cookies.get("nsk_session")?.value;
-  const isAdmin = request.cookies.get("nsk_is_admin")?.value === "true";
+  const isAdminUser = request.cookies.get("nsk_is_admin")?.value === "true";
 
-  const requiresAuth = PROTECTED_ROUTES.some((p) => pathname === p || pathname.startsWith(p + "/"));
-  const requiresAdmin = ADMIN_ROUTES.some((p) => pathname === p || pathname.startsWith(p + "/"));
-
-  // Not logged in → redirect to login
-  if (requiresAuth && !session) {
+  // Redirect unauthenticated users to login
+  if (isProtected(pathname) && !session) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }
 
-  // Logged in but not admin → block /admin
-  if (requiresAdmin && !isAdmin) {
+  // Block non-admins from admin routes
+  if (isAdmin(pathname) && !isAdminUser) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
@@ -47,12 +54,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/checklist/:path*",
-    "/budget/:path*",
-    "/settings/:path*",
-    "/support/:path*",
-    "/tasks/:path*",
-    "/admin/:path*",
+    // Exclude Next.js internals and static assets
+    "/((?!_next/static|_next/image|favicon).*)",
   ],
 };

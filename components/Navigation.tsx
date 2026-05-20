@@ -15,6 +15,7 @@ import {
   X,
   Menu,
   ChevronRight,
+  ChevronLeft,
   Building2,
   TrendingUp,
 } from "lucide-react";
@@ -32,93 +33,149 @@ const NAV_ITEMS = [
   { href: "/support", label: "Support", icon: LifeBuoy },
 ];
 
+const SIDEBAR_COLLAPSED_KEY = "nsk_sidebar_collapsed";
+
+function getCollapsed(defaultVal: boolean): boolean {
+  if (typeof window === "undefined") return defaultVal;
+  try {
+    const stored = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+    return stored !== null ? JSON.parse(stored) : defaultVal;
+  } catch {
+    return defaultVal;
+  }
+}
+
+function setCollapsed(val: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SIDEBAR_COLLAPSED_KEY, JSON.stringify(val));
+  } catch {
+    // ignore
+  }
+}
+
 export default function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<ReturnType<typeof getUser>>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsedState] = useState(true); // default to collapsed on first load
 
   useEffect(() => {
     setUser(getUser());
+    setCollapsedState(getCollapsed(true));
   }, []);
+
+  const toggleCollapse = () => {
+    const next = !collapsed;
+    setCollapsedState(next);
+    setCollapsed(next);
+  };
 
   const handleLogout = () => {
     clearAllData();
     window.location.href = "/login";
   };
 
+  // Sidebar width classes
+  const sidebarWidth = collapsed ? "w-16" : "w-64";
+  const mainMargin = collapsed ? "md:ml-16" : "md:ml-64";
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-border shrink-0 fixed h-full z-40">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+      <aside
+        className={`hidden md:flex flex-col bg-white border-r border-border shrink-0 fixed h-full z-40 transition-all duration-200 ${sidebarWidth}`}
+      >
+        {/* Logo + Collapse toggle */}
+        <div className={`flex items-center border-b border-border py-3 ${collapsed ? "justify-center px-2" : "gap-2.5 px-4"}`}>
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
             <span className="text-white font-bold text-sm">N</span>
           </div>
-          <div>
-            <p className="font-bold text-navy text-sm leading-tight">NewStart UK</p>
-            <p className="text-xs text-muted leading-tight">for International Students</p>
-          </div>
+          {!collapsed && (
+            <div>
+              <p className="font-bold text-navy text-sm leading-tight">NewStart UK</p>
+              <p className="text-xs text-muted leading-tight">for International Students</p>
+            </div>
+          )}
+          <button
+            onClick={toggleCollapse}
+            className={`ml-auto p-1.5 rounded-md hover:bg-civic-100 text-muted transition-colors ${collapsed ? "absolute top-3 right-2" : ""}`}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 py-3 px-3 space-y-0.5 overflow-y-auto">
-          {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  active
-                    ? "bg-teal-50 text-primary"
-                    : "text-civic-600 hover:bg-civic-50 hover:text-navy"
-                }`}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                {label}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 py-3 overflow-y-auto">
+          <div className={collapsed ? "px-2 space-y-1" : "px-3 space-y-0.5"}>
+            {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+              const active = pathname === href || pathname.startsWith(href + "/");
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  title={collapsed ? label : undefined}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    active
+                      ? "bg-teal-50 text-primary"
+                      : "text-civic-600 hover:bg-civic-50 hover:text-navy"
+                  } ${collapsed ? "justify-center" : ""}`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  {!collapsed && <span className="truncate">{label}</span>}
+                </Link>
+              );
+            })}
+          </div>
 
           {/* Admin */}
           {user && (
             <>
-              <div className="border-t border-border my-2" />
-              <Link
-                href="/admin"
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                  pathname.startsWith("/admin")
-                    ? "bg-teal-50 text-primary"
-                    : "text-civic-600 hover:bg-civic-50 hover:text-navy"
-                }`}
-              >
-                <Shield className="w-4 h-4 shrink-0" />
-                Admin
-              </Link>
+              <div className={`border-t border-border my-2 ${collapsed ? "mx-2" : "mx-3"}`} />
+              <div className={collapsed ? "px-2" : "px-3"}>
+                <Link
+                  href="/admin"
+                  title={collapsed ? "Admin" : undefined}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    pathname.startsWith("/admin")
+                      ? "bg-teal-50 text-primary"
+                      : "text-civic-600 hover:bg-civic-50 hover:text-navy"
+                  } ${collapsed ? "justify-center" : ""}`}
+                >
+                  <Shield className="w-4 h-4 shrink-0" />
+                  {!collapsed && "Admin"}
+                </Link>
+              </div>
             </>
           )}
         </nav>
 
         {/* User & Logout */}
-        <div className="p-3 border-t border-border">
-          <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
+        <div className={`border-t border-border p-2 ${collapsed ? "flex flex-col items-center gap-2" : "space-y-1"}`}>
+          {/* Avatar always shown */}
+          <div
+            className={`flex items-center rounded-lg hover:bg-civic-50 transition-colors ${collapsed ? "w-10 h-10 justify-center" : "gap-2.5 px-3 py-2"}`}
+          >
             <div className="w-7 h-7 bg-civic-100 rounded-full flex items-center justify-center shrink-0">
               <span className="text-xs font-bold text-navy">
                 {user?.name?.charAt(0)?.toUpperCase() ?? "?"}
               </span>
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-navy truncate">{user?.name}</p>
-              <p className="text-xs text-muted truncate">{user?.email}</p>
-            </div>
+            {!collapsed && (
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold text-navy truncate">{user?.name}</p>
+                <p className="text-xs text-muted truncate">{user?.email}</p>
+              </div>
+            )}
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-civic-500 hover:bg-red-50 hover:text-red-500 transition-all"
+            title={collapsed ? "Sign out" : undefined}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-civic-500 hover:bg-red-50 hover:text-red-500 transition-all ${collapsed ? "justify-center w-10" : ""}`}
           >
             <LogOut className="w-3.5 h-3.5 shrink-0" />
-            Sign out
+            {!collapsed && "Sign out"}
           </button>
         </div>
       </aside>
@@ -220,8 +277,8 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
           </button>
         </header>
 
-        {/* Main content */}
-        <main className="flex-1 px-4 py-6 md:pl-8 md:pr-8 max-w-5xl w-full mx-auto">
+        {/* Main content — shifts when sidebar collapses */}
+        <main className={`flex-1 px-4 py-6 md:pl-8 md:pr-8 max-w-5xl w-full mx-auto ${mainMargin} transition-all duration-200`}>
           {children}
         </main>
       </div>
