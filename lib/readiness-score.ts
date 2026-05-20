@@ -1,102 +1,82 @@
-import type {
-  ChecklistTask,
-  UserTask,
-  ArrivalProfile,
-  ReadinessScore,
-  CategoryScore,
-  TaskCategory,
-} from "@/types";
-import { SEED_TASKS } from "./seed-data";
+import type { Task, UserTask } from "@/types";
 
-export const CATEGORY_WEIGHTS: Record<TaskCategory, number> = {
+const CATEGORY_WEIGHTS: Record<string, number> = {
   Documents: 0.15,
   Accommodation: 0.15,
   University: 0.15,
   Money: 0.15,
-  Health: 0.1,
-  "Local Admin": 0.1,
-  Work: 0.1,
+  Health: 0.10,
+  "Local Admin": 0.10,
+  Work: 0.10,
   Safety: 0.05,
-  "Local Life": 0.05,
-  Transport: 0.05,
   Growth: 0.05,
+  "Local Life": 0.0,  // Local Life tasks are optional — no weight
+  Transport: 0.0,    // Transport tasks are optional in the main scoring
 };
 
-const ALL_CATEGORIES: TaskCategory[] = [
-  "Documents",
-  "Accommodation",
-  "University",
-  "Money",
-  "Health",
-  "Local Admin",
-  "Work",
-  "Safety",
-  "Local Life",
-  "Transport",
-  "Growth",
-];
+const ALL_CATEGORIES = Object.keys(CATEGORY_WEIGHTS).filter(
+  (k) => CATEGORY_WEIGHTS[k] > 0
+);
 
-export function isTaskRelevantToProfile(task: ChecklistTask, profile: ArrivalProfile): boolean {
-  // MVP default is student
-  if (task.stage === "PRE" && profile.arrivalStatus === "arrived") return false;
-  return task.active;
+export interface ReadinessScore {
+  totalScore: number; // 0-100
+  categoryBreakdown: {
+    category: string;
+    weight: number;
+    completed: number;
+    total: number;
+    percentage: number;
+    weightedContribution: number;
+  }[];
+  completedTasks: number;
+  totalRequiredTasks: number;
+  overallPercentage: number;
 }
 
 export function calculateReadinessScore(
-  profile: ArrivalProfile,
+  tasks: Task[],
   userTasks: UserTask[]
 ): ReadinessScore {
-  const relevantTasks = SEED_TASKS.filter(
-    (t) => t.active && isTaskRelevantToProfile(t, profile)
-  );
+  const userTaskMap = new Map(userTasks.map((ut) => [ut.taskId, ut]));
 
-  // Build a map of user task status
-  const taskStatusMap = new Map<string, string>();
-  userTasks.forEach((ut) => taskStatusMap.set(ut.taskId, ut.status));
+  // Only count required, active tasks
+  const requiredTasks = tasks.filter((t) => t.required && t.active);
 
-  const categoryBreakdown: CategoryScore[] = ALL_CATEGORIES.map((cat) => {
-    const catTasks = relevantTasks.filter((t) => t.category === cat);
-    const requiredTasks = catTasks.filter((t) => t.required);
-    const completedCount = requiredTasks.filter(
-      (t) => taskStatusMap.get(t.taskId) === "complete"
+  let totalWeightedScore = 0;
+
+  const breakdown = ALL_CATEGORIES.map((category) => {
+    const categoryRequiredTasks = requiredTasks.filter((t) => t.category === category);
+    const completed = categoryRequiredTasks.filter(
+      (t) => userTaskMap.get(t.taskId)?.status === "complete"
     ).length;
-    const totalRequired = requiredTasks.length;
-    const percentage = totalRequired > 0 ? (completedCount / totalRequired) * 100 : 100;
-    const weight = CATEGORY_WEIGHTS[cat] ?? 0.05;
+    const total = categoryRequiredTasks.length;
+    const percentage = total > 0 ? (completed / total) * 100 : 0;
+    const weightedContribution = percentage * CATEGORY_WEIGHTS[category];
+
+    totalWeightedScore += weightedContribution;
 
     return {
-      category: cat,
-      weight,
-      completed: completedCount,
-      total: totalRequired,
-      percentage: Math.round(percentage),
-      weightedContribution: (percentage / 100) * weight,
+      category,
+      weight: CATEGORY_WEIGHTS[category] * 100, // express as percentage points
+      completed,
+      total,
+      percentage,
+      weightedContribution,
     };
   });
 
-  // For categories with no required tasks (optional categories), treat as 100% complete
-  const totalScore = Math.round(
-    categoryBreakdown.reduce(
-      (sum, cat) =>
-        sum + (cat.total === 0 ? cat.weight * 1 : cat.weightedContribution),
-      0
-    ) * 100
-  );
+  // Overall completion percentage of required tasks
+  const totalCompleted = requiredTasks.filter(
+    (t) => userTaskMap.get(t.taskId)?.status === "complete"
+  ).length;
+  const totalRequired = requiredTasks.length;
 
-  return { totalScore: Math.min(100, totalScore), categoryBreakdown };
-}
-
-export function getUrgentTasks(
-  profile: ArrivalProfile,
-  userTasks: UserTask[],
-  limit = 3
-): ChecklistTask[] {
-  const urgent = SEED_TASKS.filter((t) => {
-    if (!t.active) return false;
-    if (!isTaskRelevantToProfile(t, profile)) return false;
-    const status = userTasks.find((ut) => ut.taskId === t.taskId)?.status ?? "not_started";
-    return status !== "complete" && (t.priority === "Very High" || t.priority === "High");
-  });
-
-  return urgent.slice(0, limit);
+  return {
+    totalScore: Math.round(totalWeightedScore),
+    categoryBreakdown: breakdown,
+    completedTasks: totalCompleted,
+    totalRequiredTasks: totalRequired,
+    overallPercentage:
+      totalRequired > 0 ? Math.round((totalCompleted / totalRequired) * 100) : 0,
+  };
 }

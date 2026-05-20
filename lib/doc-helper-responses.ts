@@ -1,157 +1,182 @@
-import type { DocHelperResponse } from "@/types";
+import type { DocType, DocHelperResponse } from "@/types";
 
-// Pre-written responses for common document types.
-// This is the MVP Document Helper — replace with OpenAI API call in MVP+.
-export const DOC_HELPER_RESPONSES: Record<string, DocHelperResponse> = {
-  tenancy: {
+const RESPONSES: Record<DocType, DocHelperResponse> = {
+  tenancy_agreement: {
     plainEnglish:
-      "A tenancy agreement is a contract between you and your landlord. It sets out: how much rent you pay, when it is due, how long the tenancy lasts, what deposits you have paid, who is responsible for repairs, and what you can and cannot do in the property. By signing it, you are agreeing to these terms — so read it carefully before you sign.",
+      "A tenancy agreement is a contract between you (the tenant) and your landlord. It sets out: how much rent you pay and when; how long the tenancy lasts (the 'term'); who is responsible for repairs and bills; what you can and cannot do in the property; and how the tenancy can be ended. Most student tenancies in the UK are 'assured shorthold tenancies' (ASTs), which give landlords certain rights to reclaim the property at the end of the term. As a tenant, you have significant legal rights — including the right to live in the property without interference, the right to have repairs done, and the right to get your deposit back if you leave the property in good condition.",
     missingFields: [
-      "Your full name and the landlord's full name",
-      "The property address (must be the full UK address)",
-      "The start and end date of the tenancy",
-      "The monthly or weekly rent amount",
-      "The deposit amount (capped at 5 weeks' rent for properties under £50,000/year)",
-      "The deposit protection scheme name (must be on the agreement)",
-      "The notice period — how much notice either side must give to end the tenancy",
-      "Which bills are included in the rent and which are not",
-      "Who is responsible for repairs — look for the phrase 'tenant responsibilities'",
+      "Your full name and the landlord's full name and address",
+      "The property address",
+      "The start date and end date of the tenancy",
+      "The monthly rent amount and which bank account to pay it to",
+      "The deposit amount and which deposit protection scheme holds it",
+      "Which bills are included in the rent",
+      "The notice period (how much notice either side must give to end the tenancy)",
+      "A list of any items included in the rent (white goods, furniture, etc.)",
     ],
     keyTerms: [
-      { term: "Assured Shorthold Tenancy (AST)", meaning: "The most common type of private rental tenancy in England. It gives you the right to live in the property for a fixed period." },
-      { term: "Deposit", meaning: "Money you pay upfront that is held as security. By law it must be protected in a government-approved scheme." },
-      { term: "Inventory", meaning: "A list of everything in the property at the start and end of your tenancy — used to check for damage." },
-      { term: "Notice period", meaning: "How much notice you (or the landlord) must give to end the tenancy." },
-      { term: "Rent in advance", meaning: "You usually pay your first month's rent before moving in." },
+      { term: "Assured Shorthold Tenancy (AST)", meaning: "The most common type of tenancy in England and Wales. It gives you the right to live in the property for the tenancy term, and your landlord must use a court process to evict you. You have strong rights." },
+      { term: "Tenancy Deposit", meaning: "Money you pay upfront as security. By law, your landlord must protect it in a government-approved scheme within 30 days. You should get it back at the end of the tenancy minus any legitimate deductions." },
+      { term: "Break Clause", meaning: "A clause in your tenancy agreement that allows either you or the landlord to end the tenancy early under specific conditions. Not all tenancy agreements have one." },
+      { term: "Notice Period", meaning: "The amount of notice you must give (usually 1 month) to leave the property. This is different from the tenancy end date." },
+      { term: "Inventory", meaning: "A written record of the condition and contents of the property at the start of the tenancy. You should check and sign it carefully — it is used at the end to assess any damage." },
     ],
     safeNextSteps: [
-      "Read the full agreement before signing — do not be rushed.",
-      "Take photos of everything in the property before signing the inventory.",
-      "Check the deposit protection scheme is listed — your deposit is legally protected.",
-      "Ask the landlord to explain anything you do not understand.",
-      "Keep a copy of everything you sign.",
-      "Seek advice from Shelter, Citizens Advice, or your university's housing advice service if unsure.",
+      "Read the entire agreement before signing — do not rush this.",
+      "Use Shelter's free tenancy agreement checker at shelterengland.org.",
+      "Check that the deposit will be protected in a government-approved scheme (TDS, DPS, or MyDeposits).",
+      "Take timestamped photos of the property on move-in day.",
+      "Get a copy of the signed agreement and save it securely.",
+      "Confirm in writing anything discussed verbally with the landlord before signing.",
     ],
   },
-  council_tax: {
+  council_tax_letter: {
     plainEnglish:
-      "Council tax is a local tax that helps pay for local services — bin collections, roads, libraries, and the police and fire services. In England, it is charged on most residential properties. As a full-time student, you are exempt from council tax — but you must tell your local council and prove you are a student.",
+      "A council tax letter is a bill from your local council for the local services they provide — including bin collection, local roads, libraries, and street lighting. The amount is based on the 'band' your property is assigned to (bands A-H, with lower bands paying less). As a full-time student, you are entitled to a full council tax exemption — you do not have to pay it. Your university must provide you with a student status letter to prove this. If you receive a council tax bill, do not ignore it — you need to write to the council with your student status letter to claim the exemption.",
     missingFields: [
       "Your full name and the property address",
-      "Your student status — you need a letter from your university confirming you are a full-time student",
-      "The names and dates of birth of all adults living in the property",
-      "Whether the property is wholly occupied by students",
+      "Your student status letter from your university (on headed paper, with your name, course, and expected completion date)",
+      "Your National Insurance number (the council will ask for this)",
+      "Evidence that the tenancy is in your name",
     ],
     keyTerms: [
-      { term: "Council Tax band", meaning: "Properties are assigned a band (A–H) based on value. Higher bands pay more council tax." },
-      { term: "Council Tax exemption", meaning: "Full-time students are exempt from council tax. The exemption must be claimed — it is not automatic." },
-      { term: "Single person discount", meaning: "If only one adult lives in a property, they can claim a 25% discount." },
-      { term: "Council Tax support", meaning: "If you are on a low income, you may be able to claim help with council tax." },
-      { term: "Student", meaning: "For council tax purposes, a student is someone on a full-time course lasting at least one year, with at least 21 hours of study per week." },
+      { term: "Council Tax Band", meaning: "Your property is assigned one of eight bands (A-H) based on its value. Lower bands pay less council tax. Bands are set by the Valuation Office Agency, not by the council." },
+      { term: "Student Exemption", meaning: "Full-time students are exempt from council tax. You must apply to your council with a student status letter — it is not automatic." },
+      { term: "Liability Date", meaning: "The date from which you become responsible for council tax at a property. This is usually the date you move in, not the date you sign the tenancy." },
+      { term: "HC2 Certificate", meaning: "A certificate from the NHS that proves you qualify for free prescriptions, dental care, and eye tests. It is not related to council tax." },
     ],
     safeNextSteps: [
-      "Contact your local council (gov.uk/find-your-local-council) and tell them you are a student.",
-      "Get a student status letter from your university — use this as proof.",
-      "Submit the letter to the council and ask for written confirmation of your exemption.",
-      "Do not ignore any council tax letters you receive — always respond even if you think you are exempt.",
-      "If you live with non-students, seek advice — council tax rules become more complex.",
-      "Keep copies of all letters and correspondence.",
+      "Find your local council at gov.uk/find-your-local-council.",
+      "Download or request a student council tax exemption form from your council's website.",
+      "Attach your student status letter and send it to the council in writing.",
+      "Keep copies of all correspondence.",
+      "If you receive a bill in error, respond in writing immediately — do not ignore it.",
+      "Re-apply for the exemption at the start of each academic year.",
     ],
   },
   student_status_letter: {
     plainEnglish:
-      "A student status letter (sometimes called an enrollment letter or student confirmation letter) is an official letter from your university confirming that you are a registered student. You need this letter to prove your student status to banks, councils, landlords, and other official bodies.",
+      "A student status letter (also called an enrolment letter or confirmation of student status letter) is an official letter from your university confirming that you are a full-time student. It is not the same as your student ID card — it is a formal document that organisations often require before providing services or discounts. Banks need it to open a student account. The council needs it to apply for council tax exemption. Letting agents may need it as part of referencing. You usually request it from your university's student services, registry, or through the student portal. Most universities issue it within 3–5 working days, and some charge a small fee.",
     missingFields: [
-      "Your full name as registered at the university",
+      "Your full name as it appears on your passport and university records",
       "Your student ID number",
-      "The course name and start and expected end date",
-      "The university's name and contact details",
-      "The signature of an authorised university official",
-      "The university's official stamp or letterhead",
+      "Your course title and level of study (undergraduate, postgraduate, etc.)",
+      "Your expected start and end dates of your course",
+      "Your university's name and official stamp or letterhead",
+      "The name of the organisation the letter should be addressed to (e.g. 'To whom it may concern' or a specific bank name)",
     ],
     keyTerms: [
-      { term: "CAS (Confirmation of Acceptance for Studies)", meaning: "A document you receive before you travel. It confirms your university place. You need it to apply for your student visa. It is different from a student status letter." },
-      { term: "Enrollment", meaning: "The formal process of registering as a student at your university. You must complete enrollment before you can get a student status letter." },
-      { term: "Student status letter", meaning: "An official letter confirming you are a current student. Used for council tax exemption, bank accounts, and NI number applications." },
+      { term: "CAS (Confirmation of Acceptance for Studies)", meaning: "This is different from a student status letter — it is the document issued by your university that you used to apply for your student visa. It is not used for general purpose student status confirmation." },
+      { term: " matriculation", meaning: "The formal process of becoming a registered student of a university. Some universities require you to attend a matriculation ceremony or complete online steps before you are officially enrolled." },
+      { term: "Student Finance", meaning: "Student Finance England, Scotland, Wales, or Northern Ireland — the government body that administers student loans and grants. They are different from your university." },
     ],
     safeNextSteps: [
-      "Request the letter through your student portal or the international student office.",
-      "Specify what you need the letter for — banks and councils may need specific wording.",
-      "Allow 3–5 working days for processing.",
-      "Check all details on the letter before using it — name, course, dates.",
-      "If the letter is for council tax, check your council's website for any specific requirements.",
-      "Keep digital and physical copies.",
+      "Check your university student portal first — some allow you to download a student status letter automatically.",
+      "If not available online: email or visit your university's student services or registry.",
+      "Request 2–3 copies at once so you have spares.",
+      "Specify the exact purpose and whether the letter needs to be addressed to a specific organisation.",
+      "Check the letter carefully before using it — confirm your name, dates, and course are correct.",
     ],
   },
   bank_letter: {
     plainEnglish:
-      "A bank letter is a letter from your bank confirming your account details and your status as an account holder. Some banks provide this automatically; others require you to request it. Banks may ask for this letter when you are opening a new account or to verify your identity and address.",
+      "A bank letter is a letter from your UK bank confirming your identity, address, and account status. Banks can provide this in different formats — a standard letter on bank letterhead, a printed statement with a bank stamp, or a letter specifically addressed to a third party (such as a letting agent or employer). Different organisations ask for different formats. Check what they need before requesting the letter — you may not need a formal letter at all.",
     missingFields: [
-      "Your full name as it appears on your account",
-      "Your account number (the 8-digit number — not your card number)",
-      "Your sort code (the 6-digit number shown as XX-XX-XX)",
-      "The date the account was opened",
-      "Your address as registered with the bank",
+      "Your full name as it appears on your bank account",
+      "Your account number and sort code",
+      "The date the letter was issued",
       "The bank's name, address, and contact details",
-      "An official bank signature or stamp",
+      "A statement that the account is active and in good standing (if required by the requesting organisation)",
+      "A bank stamp or signature — some organisations require this",
     ],
     keyTerms: [
-      { term: "Sort code", meaning: "A 6-digit code that identifies your bank and branch. Shown as XX-XX-XX." },
-      { term: "Account number", meaning: "An 8-digit number that uniquely identifies your account." },
-      { term: "Statement", meaning: "A document showing all transactions in your account over a period of time. You can download this from your bank's app or website." },
-      { term: "Bank letter vs statement", meaning: "A bank letter is an official confirmation letter. A bank statement is a transaction history. Some organisations require one, some the other — check what they need." },
+      { term: "Bank Statement", meaning: "A document showing all transactions on your account over a period of time. Most banks provide this through their app or online banking. It can serve as proof of address — check what your organisation accepts." },
+      { term: "Account Confirmation Letter", meaning: "A letter from your bank confirming your account details. Some banks call this a 'banker's letter' or 'reference letter'." },
+      { term: "Sort Code", meaning: "A 6-digit code that identifies your bank and branch. You can find it on your bank card, in your banking app, or on your bank's website." },
+      { term: "Current Account", meaning: "A bank account used for day-to-day transactions. Student current accounts are designed for students and often include an interest-free overdraft." },
     ],
     safeNextSteps: [
-      "Log into your online banking or app to request an account summary or letter.",
-      "Most UK banks can provide this digitally — check your app first.",
-      "If you need a physical letter, visit a branch or contact your bank.",
-      "Check what format the requesting organisation needs — digital or physical.",
-      "Some banks charge for printed letters — check before requesting.",
-      "Keep copies of all bank letters you receive.",
+      "Check exactly what format your bank letter needs to be in — ask the organisation requesting it.",
+      "Most banks allow you to download or print account summaries from their app — this is often sufficient as proof of address.",
+      "If a formal letter is needed: visit a branch in person, call your bank's customer service line, or use the bank's secure messaging service in your app.",
+      "Most banks issue account letters within 3–5 working days.",
+      "Some banks charge for formal reference letters — check before requesting.",
     ],
   },
-  nhs_registration: {
+  nhs_registration_form: {
     plainEnglish:
-      "Registering with a GP (General Practitioner — your local doctor) gives you access to the NHS. NHS GP services are free for everyone in the UK, regardless of nationality. To register, you fill in a form (GMS1), provide your address, and the GP surgery will confirm your registration.",
+      "The NHS GP registration form (called a GMS1 form) is the form you fill in to register with a NHS General Practitioner (GP, or family doctor). Registration with a GP is free and gives you access to NHS healthcare. You do not need to provide ID or proof of address to register — the NHS says anyone can register with a GP surgery regardless of immigration status. Once registered, you get an NHS number, which is your unique reference in the NHS system. You can register with any GP surgery that has space for new patients.",
     missingFields: [
-      "Your full name and date of birth",
-      "Your UK address (your term-time address — this is important)",
+      "Your full name, date of birth, and gender",
+      "Your UK address (use your accommodation address, even if you are not sure how long you will be there)",
       "Your previous address in your home country",
-      "Your previous GP's name and address (so medical records can be transferred)",
-      "Details of any ongoing medical conditions or medications you take",
-      "Your NHS number (if you have been registered before — if not, you will receive one after registration)",
+      "Your NHS number if you have one already (check your BRP letter or previous NHS letters)",
+      "Details of any ongoing medical conditions, medications, or allergies",
+      "The name and address of your previous GP (if you had one in the UK)",
+      "Emergency contact details",
     ],
     keyTerms: [
-      { term: "GP (General Practitioner)", meaning: "Your local doctor — your first point of contact for non-emergency medical care in the UK." },
-      { term: "NHS number", meaning: "A unique 10-digit number that identifies your NHS health records. You receive this after registering with a GP." },
-      { term: "NHS App", meaning: "An app that lets you book GP appointments, order prescriptions, view your health records, and more. Download it from your app store." },
-      { term: "GMS1 form", meaning: "The form you fill in to register with a GP. Available from the GP surgery or nhs.uk." },
-      { term: "Walk-in centre", meaning: "A medical centre where you can see a doctor without an appointment. For minor injuries and illnesses only." },
+      { term: "GP (General Practitioner)", meaning: "A family doctor — the first point of contact for most health issues in the UK. GP services are free on the NHS." },
+      { term: "NHS Number", meaning: "Your unique 10-digit reference number in the NHS. You are assigned one when you register with a GP. Keep it noted — you will need it for prescriptions, referrals, and medical records." },
+      { term: "GMS1 Form", meaning: "The standard registration form for NHS GP services. Available from any GP surgery or online at nhs.uk." },
+      { term: "A&E (Accident and Emergency)", meaning: "Hospital emergency departments — for serious and life-threatening emergencies only. Not for routine health issues." },
+      { term: "Prescription", meaning: "A written instruction from a doctor for medication. As of 2024, NHS prescriptions cost £9.90 per item unless you qualify for free prescriptions (full-time students on a low income can apply for an HC2 certificate)." },
     ],
     safeNextSteps: [
-      "Use the NHS 'Find a GP' service at nhs.uk/service-search/find-a-gp to find GPs near your term-time address.",
-      "Check if the GP is accepting new patients — some are full.",
-      "Fill in the GMS1 form and submit it to the GP surgery.",
-      "You do not need to pay anything and you do not need your visa or BRP.",
-      "Once registered, book a new patient health check — this is free.",
-      "Download the NHS App to manage appointments online.",
+      "Find a GP surgery near your accommodation: nhs.uk/service-search/find-a-gp.",
+      "Call or visit your top choices to check they are accepting new patients.",
+      "Fill in the GMS1 form (available from the surgery or at nhs.uk).",
+      "Submit the form in person or by post — most surgeries accept emailed scans.",
+      "You do not need to show ID or proof of address — this is your right under NHS guidelines.",
+      "Your NHS number will be posted to you within 2–3 weeks.",
+      "Download the NHS App to manage appointments and prescriptions online.",
     ],
   },
 };
 
-export function getDocHelperResponse(
-  documentType: string
-): DocHelperResponse | null {
-  const type = documentType.toLowerCase().trim();
-  return DOC_HELPER_RESPONSES[type] ?? null;
+export function getDocHelperResponse(docType: string): DocHelperResponse {
+  if (docType && RESPONSES[docType as DocType]) {
+    return RESPONSES[docType as DocType];
+  }
+  return {
+    plainEnglish: "I don't have a pre-written explanation for that document type yet. In general, always read any document carefully before signing, keep copies, and ask questions if anything is unclear. For specific advice about a legal, immigration, financial, or medical document, contact a qualified professional.",
+    missingFields: [],
+    keyTerms: [],
+    safeNextSteps: [
+      "Read the document in full before signing or acting on it.",
+      "Ask the organisation that issued the document to explain anything you do not understand.",
+      "If it is a legal document, consider seeking advice from Citizens Advice or a qualified solicitor.",
+      "If it involves money or a financial commitment, do not feel pressured to sign immediately.",
+    ],
+  };
 }
 
-export function getAvailableDocTypes(): { type: string; label: string }[] {
+export function getAvailableDocTypes(): { type: DocType; label: string; desc: string }[] {
   return [
-    { type: "tenancy", label: "Tenancy Agreement" },
-    { type: "council_tax", label: "Council Tax Letter" },
-    { type: "student_status_letter", label: "Student Status Letter" },
-    { type: "bank_letter", label: "Bank Letter / Statement" },
-    { type: "nhs_registration", label: "NHS Registration Form" },
+    {
+      type: "tenancy_agreement",
+      label: "Tenancy Agreement",
+      desc: "Renting a property — what you are signing up for",
+    },
+    {
+      type: "council_tax_letter",
+      label: "Council Tax Letter",
+      desc: "A bill or notice from your local council",
+    },
+    {
+      type: "student_status_letter",
+      label: "Student Status Letter",
+      desc: "University confirmation of your student status",
+    },
+    {
+      type: "bank_letter",
+      label: "Bank Letter",
+      desc: "Letter from your bank confirming your account",
+    },
+    {
+      type: "nhs_registration_form",
+      label: "NHS GP Registration Form",
+      desc: "Registering with a UK family doctor",
+    },
   ];
 }

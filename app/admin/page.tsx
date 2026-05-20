@@ -1,35 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Users,
-  CheckSquare,
-  BookOpen,
-  Shield,
-  TrendingUp,
-  ArrowRight,
-} from "lucide-react";
 import { getUserTasks } from "@/lib/utils";
 import { SEED_TASKS } from "@/lib/seed-data";
 import { GUIDANCE_PAGES } from "@/lib/guidance-data";
+import { SCAM_ALERTS } from "@/lib/scam-alerts";
+import { Shield, CheckSquare, BookOpen, AlertTriangle, ArrowRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
-export default function AdminDashboard() {
-  const [tasks, setTasks] = useState<ReturnType<typeof getUserTasks>>([]);
+export default function AdminPage() {
+  const [userTasks, setUserTasks] = useState<ReturnType<typeof getUserTasks>>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setTasks(getUserTasks());
     setMounted(true);
+    setUserTasks(getUserTasks());
   }, []);
 
   if (!mounted) return null;
 
-  const completedCount = tasks.filter((t) => t.status === "complete").length;
-  const totalTasks = SEED_TASKS.filter((t) => t.active).length;
-  const guidanceCount = GUIDANCE_PAGES.length;
-  const highPriorityTasks = SEED_TASKS.filter((t) => t.priority === "Very High" && t.active);
-  const riskFlaggedTasks = SEED_TASKS.filter((t) => t.riskWarning && t.active);
+  const completedCount = userTasks.filter((t) => t.status === "complete").length;
+  const totalActiveTasks = SEED_TASKS.filter((t) => t.active).length;
+  const requiredTasks = SEED_TASKS.filter((t) => t.required && t.active);
+  const highPriority = SEED_TASKS.filter((t) => t.priority === "Very High" && t.active);
 
   return (
     <Navigation>
@@ -42,38 +35,10 @@ export default function AdminDashboard() {
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            {
-              label: "Checklist Tasks",
-              value: `${SEED_TASKS.filter((t) => t.active).length}`,
-              sub: `Required: ${SEED_TASKS.filter((t) => t.required && t.active).length}`,
-              icon: CheckSquare,
-              color: "text-primary",
-              bg: "bg-brand-50",
-            },
-            {
-              label: "Guidance Pages",
-              value: `${guidanceCount}`,
-              sub: "All published",
-              icon: BookOpen,
-              color: "text-purple-500",
-              bg: "bg-purple-50",
-            },
-            {
-              label: "High Priority Tasks",
-              value: `${highPriorityTasks.length}`,
-              sub: `${riskFlaggedTasks.length} with risk warnings`,
-              icon: TrendingUp,
-              color: "text-amber-500",
-              bg: "bg-amber-50",
-            },
-            {
-              label: "Users (MVP mock)",
-              value: "—",
-              sub: "Auth: Supabase later",
-              icon: Users,
-              color: "text-blue-500",
-              bg: "bg-blue-50",
-            },
+            { label: "Active Tasks", value: `${totalActiveTasks}`, sub: `Required: ${requiredTasks.length}`, icon: CheckSquare, color: "text-primary", bg: "bg-teal-50" },
+            { label: "Guidance Articles", value: `${GUIDANCE_PAGES.length}`, sub: "All published", icon: BookOpen, color: "text-purple-500", bg: "bg-purple-50" },
+            { label: "Scam Alerts", value: `${SCAM_ALERTS.length}`, sub: "Active alerts", icon: AlertTriangle, color: "text-amber-500", bg: "bg-amber-50" },
+            { label: "User Tasks (demo)", value: `${completedCount}`, sub: "Tasks completed", icon: CheckSquare, color: "text-green-500", bg: "bg-green-50" },
           ].map((stat) => (
             <div key={stat.label} className="card">
               <div className="flex items-center justify-between mb-2">
@@ -95,7 +60,7 @@ export default function AdminDashboard() {
               <div>
                 <h2 className="text-base font-semibold text-navy mb-1">Task Manager</h2>
                 <p className="text-sm text-muted">
-                  Manage {totalTasks} checklist task templates — edit priority, guidance links, risk warnings, and activate/deactivate tasks.
+                  Manage {totalActiveTasks} checklist task templates — edit priority, guidance links, risk warnings, and activate/deactivate.
                 </p>
               </div>
               <ArrowRight className="w-5 h-5 text-muted shrink-0" />
@@ -106,7 +71,7 @@ export default function AdminDashboard() {
               <div>
                 <h2 className="text-base font-semibold text-navy mb-1">Guidance Manager</h2>
                 <p className="text-sm text-muted">
-                  Manage {guidanceCount} guidance articles — edit content, update categories, review dates, and add new articles.
+                  Manage {GUIDANCE_PAGES.length} guidance articles — view all articles, check last reviewed dates.
                 </p>
               </div>
               <ArrowRight className="w-5 h-5 text-muted shrink-0" />
@@ -116,16 +81,16 @@ export default function AdminDashboard() {
 
         {/* High priority task preview */}
         <div className="card">
-          <h2 className="section-title mb-3">Very High Priority Tasks</h2>
+          <h2 className="section-title mb-3">Very High Priority Tasks ({highPriority.length})</h2>
           <div className="space-y-2">
-            {highPriorityTasks.slice(0, 5).map((t) => (
+            {highPriority.slice(0, 5).map((t) => (
               <div key={t.taskId} className="flex items-center justify-between p-3 bg-civic-50 rounded-xl">
                 <div>
                   <p className="text-sm font-medium text-navy">{t.title}</p>
                   <p className="text-xs text-muted">{t.taskId} · {t.category} · {t.stage}</p>
                 </div>
-                <Link href={`/admin/tasks`} className="text-xs text-primary hover:underline">
-                  Edit →
+                <Link href={`/tasks/${t.taskId}`} className="text-xs text-primary hover:underline">
+                  View →
                 </Link>
               </div>
             ))}

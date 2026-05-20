@@ -1,92 +1,80 @@
-// ─── User & Auth ───────────────────────────────────────────────────────────
-
+// ===== User & Auth =====
 export interface User {
   id: string;
   name: string;
   email: string;
+  passwordHash: string;
   createdAt: string;
 }
 
+// ===== Arrival Profile =====
+export type ArrivalStatus = "not_arrived" | "arriving_soon" | "arrived";
+export type AccommodationType =
+  | "private_rental"
+  | "university_accommodation"
+  | "family_friend"
+  | "temporary"
+  | "not_secured";
+export type EnglishLevel = "beginner" | "intermediate" | "advanced" | "fluent";
+
 export interface ArrivalProfile {
-  arrivalType: "student" | "worker" | "family" | "visitor" | "other";
-  arrivalStatus: "not_arrived" | "arriving_soon" | "arrived";
+  arrivalType: "international_student";
+  arrivalStatus: ArrivalStatus;
   arrivalDate: string; // ISO date string
   city: string;
   university: string;
-  accommodationType:
-    | "private_rental"
-    | "university_accommodation"
-    | "family"
-    | "temporary"
-    | "not_secured";
+  accommodationType: AccommodationType;
   nationality?: string;
-  englishLevel?: "beginner" | "intermediate" | "advanced";
+  englishLevel?: EnglishLevel;
   interestedInWork: boolean;
-  completed: boolean;
+  profileCompleted: boolean;
 }
 
-// ─── Stage ─────────────────────────────────────────────────────────────────
-
-export type JourneyStage = "PRE" | "D1" | "D7" | "D30" | "D90" | "GROW";
-
-// ─── Categories & Tasks ─────────────────────────────────────────────────────
-
+// ===== Checklist Tasks =====
+export type TaskStage = "PRE" | "D1" | "D7" | "D30" | "D90" | "GROW";
 export type TaskCategory =
   | "Documents"
   | "Accommodation"
   | "University"
   | "Money"
   | "Health"
+  | "Transport"
   | "Local Admin"
   | "Work"
   | "Safety"
-  | "Local Life"
   | "Growth"
-  | "Transport";
-
+  | "Local Life";
 export type TaskPriority = "Very High" | "High" | "Medium" | "Low";
 export type TaskStatus = "not_started" | "in_progress" | "complete";
 
-export interface TaskDependency {
-  taskId: string;
-  label: string;
-}
-
-export interface ChecklistTask {
+export interface Task {
   taskId: string;
   title: string;
-  stage: JourneyStage | "PRE";
+  summary: string;
+  stage: TaskStage;
   category: TaskCategory;
   priority: TaskPriority;
   required: boolean;
-  conditional?: boolean; // conditional on profile (e.g. only if renting privately)
-  conditionNote?: string;
-  dependencyIds: string[];
-  whyItMatters: string;
+  active: boolean;
+  aiHelperAllowed: boolean;
+  riskWarning?: string;
+  estimatedMinutes: number;
+  guidanceSlug?: string;
   whatToPrepare: string[];
   stepsToTake: string[];
   commonMistakes: string[];
-  riskWarning?: string;
-  guidanceSlug?: string;
-  sourceNote?: string;
-  reminderTrigger?: string; // e.g. "arrival_date + 10 days"
-  escalationFlag: boolean;
-  adminEditable: boolean;
-  active: boolean;
-  aiHelperAllowed: boolean;
-  sourceRequired: boolean;
+  whyItMatters: string;
+  sourceSignpost?: string;
+  conditional?: string; // e.g. "Only if renting privately"
 }
 
 export interface UserTask {
   taskId: string;
   status: TaskStatus;
   completedAt?: string;
-  startedAt?: string;
-  notes?: string;
 }
 
-// ─── Guidance ───────────────────────────────────────────────────────────────
-
+// ===== Guidance =====
 export type GuidanceCategory =
   | "Documents"
   | "Accommodation"
@@ -97,7 +85,7 @@ export type GuidanceCategory =
   | "Safety"
   | "Local Life";
 
-export interface GuidancePage {
+export interface GuidanceArticle {
   slug: string;
   title: string;
   category: GuidanceCategory;
@@ -108,21 +96,46 @@ export interface GuidancePage {
   stepsToTake: string[];
   commonMistakes: string[];
   safetyWarning?: string;
-  sourceSignpost: string;
+  sourceSignpost?: string;
   disclaimer: string;
-  relatedTaskIds: string[];
   lastReviewed: string;
+  relatedTaskIds: string[];
 }
 
-// ─── Reminders ──────────────────────────────────────────────────────────────
+// ===== Scam Alerts =====
+export interface ScamAlert {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  severity: "high" | "medium";
+}
 
+// ===== Document Helper =====
+export type DocType =
+  | "tenancy_agreement"
+  | "council_tax_letter"
+  | "student_status_letter"
+  | "bank_letter"
+  | "nhs_registration_form";
+
+export interface DocHelperResponse {
+  plainEnglish: string;
+  missingFields: string[];
+  keyTerms: { term: string; meaning: string }[];
+  safeNextSteps: string[];
+  refusal?: boolean;
+  refusalReason?: string;
+}
+
+// ===== Reminders =====
+export type ReminderFrequency = "daily" | "weekly" | "biweekly" | "monthly";
 export interface ReminderPrefs {
   emailReminders: boolean;
-  frequency: "daily" | "weekly" | "biweekly" | "monthly";
+  frequency: ReminderFrequency;
 }
 
-// ─── Support ────────────────────────────────────────────────────────────────
-
+// ===== Support =====
 export type SupportCategory =
   | "account"
   | "checklist"
@@ -138,53 +151,12 @@ export interface SupportTicket {
   description: string;
   email: string;
   createdAt: string;
-  status: "open" | "in_progress" | "resolved";
+  status: "open" | "resolved";
 }
 
-// ─── Scam Alerts ────────────────────────────────────────────────────────────
-
-export interface ScamAlert {
-  id: string;
-  title: string;
-  type: "housing" | "jobs" | "documents" | "finance" | "general";
-  headline: string;
-  description: string;
-  redFlags: string[];
-  safeActions: string[];
-}
-
-// ─── Admin ──────────────────────────────────────────────────────────────────
-
+// ===== Admin =====
 export interface AdminStats {
   totalUsers: number;
   onboardingCompletion: number;
-  avgTaskCompletion: number;
-  topIncompleteCategories: TaskCategory[];
-}
-
-// ─── Readiness Score ─────────────────────────────────────────────────────────
-
-export interface CategoryScore {
-  category: TaskCategory;
-  weight: number;
-  completed: number;
-  total: number;
-  percentage: number;
-  weightedContribution: number;
-}
-
-export interface ReadinessScore {
-  totalScore: number;
-  categoryBreakdown: CategoryScore[];
-}
-
-// ─── Document Helper ────────────────────────────────────────────────────────
-
-export interface DocHelperResponse {
-  plainEnglish: string;
-  missingFields: string[];
-  keyTerms: { term: string; meaning: string }[];
-  safeNextSteps: string[];
-  refusal?: boolean;
-  refusalReason?: string;
+  taskCompletionRate: number;
 }

@@ -6,161 +6,149 @@ import type {
   SupportTicket,
 } from "@/types";
 
-// ─── Storage Keys ────────────────────────────────────────────────────────────
-
+// ─── Key names ────────────────────────────────────────────────────────────────
 const KEYS = {
-  USER: "nsubuk_user",
-  PROFILE: "nsubuk_profile",
-  USER_TASKS: "nsubuk_user_tasks",
-  REMINDER_PREFS: "nsubuk_reminders",
-  SUPPORT_TICKETS: "nsubuk_support_tickets",
+  USER: "nsk_user",
+  PROFILE: "nsk_profile",
+  TASKS: "nsk_tasks",
+  REMINDERS: "nsk_reminders",
+  TICKETS: "nsk_tickets",
 } as const;
 
-// ─── User ────────────────────────────────────────────────────────────────────
-
-export function getUser(): User | null {
-  if (typeof window === "undefined") return null;
+// ─── Generic helpers ─────────────────────────────────────────────────────────
+function safeGet<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
   try {
-    const raw = localStorage.getItem(KEYS.USER);
-    return raw ? JSON.parse(raw) : null;
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
   } catch {
-    return null;
+    return fallback;
   }
+}
+
+function safeSet<T>(key: string, value: T): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // storage full or unavailable
+  }
+}
+
+// ─── Auth / User ─────────────────────────────────────────────────────────────
+export function getUser(): User | null {
+  return safeGet<User | null>(KEYS.USER, null);
 }
 
 export function setUser(user: User): void {
-  localStorage.setItem(KEYS.USER, JSON.stringify(user));
+  safeSet(KEYS.USER, user);
 }
 
 export function clearUser(): void {
-  localStorage.removeItem(KEYS.USER);
+  if (typeof window !== "undefined") localStorage.removeItem(KEYS.USER);
 }
 
-// ─── Arrival Profile ─────────────────────────────────────────────────────────
-
-export function getArrivalProfile(): ArrivalProfile | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(KEYS.PROFILE);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
+export function hashPassword(password: string): string {
+  // MVP only — localStorage demo auth. In production, use Supabase Auth or similar.
+  // This is a simple hash for demo purposes only.
+  let hash = 0;
+  for (let i = 0; i < password.length; i++) {
+    const char = password.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0;
   }
+  return `demo_${Math.abs(hash).toString(16)}`;
+}
+
+export function createUser(name: string, email: string, password: string): User {
+  return {
+    id: generateId(),
+    name,
+    email,
+    passwordHash: hashPassword(password),
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export function verifyPassword(password: string, hash: string): boolean {
+  return hashPassword(password) === hash;
+}
+
+// ─── Arrival Profile ──────────────────────────────────────────────────────────
+export function getArrivalProfile(): ArrivalProfile | null {
+  return safeGet<ArrivalProfile | null>(KEYS.PROFILE, null);
 }
 
 export function setArrivalProfile(profile: ArrivalProfile): void {
-  localStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
+  safeSet(KEYS.PROFILE, profile);
 }
 
 export function clearArrivalProfile(): void {
-  localStorage.removeItem(KEYS.PROFILE);
+  if (typeof window !== "undefined") localStorage.removeItem(KEYS.PROFILE);
 }
 
 // ─── User Tasks ──────────────────────────────────────────────────────────────
-
 export function getUserTasks(): UserTask[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEYS.USER_TASKS);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return safeGet<UserTask[]>(KEYS.TASKS, []);
 }
 
 export function setUserTasks(tasks: UserTask[]): void {
-  localStorage.setItem(KEYS.USER_TASKS, JSON.stringify(tasks));
+  safeSet(KEYS.TASKS, tasks);
 }
 
-export function updateUserTask(taskId: string, status: UserTask["status"]): UserTask[] {
+export function getUserTask(taskId: string): UserTask | undefined {
+  return getUserTasks().find((t) => t.taskId === taskId);
+}
+
+export function upsertUserTask(taskId: string, status: UserTask["status"]): void {
   const tasks = getUserTasks();
-  const existing = tasks.find((t) => t.taskId === taskId);
-  if (existing) {
-    existing.status = status;
-    if (status === "complete") existing.completedAt = new Date().toISOString();
-    if (status === "in_progress") existing.startedAt = existing.startedAt ?? new Date().toISOString();
+  const idx = tasks.findIndex((t) => t.taskId === taskId);
+  if (idx >= 0) {
+    tasks[idx] = { taskId, status, completedAt: status === "complete" ? new Date().toISOString() : undefined };
   } else {
-    tasks.push({
-      taskId,
-      status,
-      startedAt: status === "in_progress" ? new Date().toISOString() : undefined,
-      completedAt: status === "complete" ? new Date().toISOString() : undefined,
-    });
+    tasks.push({ taskId, status, completedAt: status === "complete" ? new Date().toISOString() : undefined });
   }
   setUserTasks(tasks);
-  return tasks;
 }
 
-// ─── Reminders ────────────────────────────────────────────────────────────────
-
+// ─── Reminder Preferences ─────────────────────────────────────────────────────
 export function getReminderPrefs(): ReminderPrefs {
-  if (typeof window === "undefined")
-    return { emailReminders: false, frequency: "weekly" };
-  try {
-    const raw = localStorage.getItem(KEYS.REMINDER_PREFS);
-    return raw
-      ? JSON.parse(raw)
-      : { emailReminders: false, frequency: "weekly" };
-  } catch {
-    return { emailReminders: false, frequency: "weekly" };
-  }
+  return safeGet<ReminderPrefs>(KEYS.REMINDERS, {
+    emailReminders: false,
+    frequency: "weekly",
+  });
 }
 
 export function setReminderPrefs(prefs: ReminderPrefs): void {
-  localStorage.setItem(KEYS.REMINDER_PREFS, JSON.stringify(prefs));
+  safeSet(KEYS.REMINDERS, prefs);
 }
 
-// ─── Support Tickets ──────────────────────────────────────────────────────────
-
+// ─── Support Tickets ─────────────────────────────────────────────────────────
 export function getSupportTickets(): SupportTicket[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(KEYS.SUPPORT_TICKETS);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+  return safeGet<SupportTicket[]>(KEYS.TICKETS, []);
 }
 
 export function addSupportTicket(ticket: SupportTicket): void {
   const tickets = getSupportTickets();
   tickets.push(ticket);
-  localStorage.setItem(KEYS.SUPPORT_TICKETS, JSON.stringify(tickets));
+  safeSet(KEYS.TICKETS, tickets);
 }
 
-// ─── Auth Helpers ─────────────────────────────────────────────────────────────
-
-export function isLoggedIn(): boolean {
-  return getUser() !== null;
-}
-
-export function hasCompletedOnboarding(): boolean {
-  const profile = getArrivalProfile();
-  return profile !== null && profile.completed;
-}
-
+// ─── Clear all data ──────────────────────────────────────────────────────────
 export function clearAllData(): void {
-  Object.values(KEYS).forEach((key) => localStorage.removeItem(key));
+  if (typeof window === "undefined") return;
+  Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
 }
 
-// ─── Misc ─────────────────────────────────────────────────────────────────────
-
+// ─── Utilities ────────────────────────────────────────────────────────────────
 export function generateId(): string {
-  return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+  return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
-export function formatDate(isoDate: string): string {
-  return new Date(isoDate).toLocaleDateString("en-GB", {
+export function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-}
-
-export function daysUntil(isoDate: string): number {
-  const target = new Date(isoDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
-  return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }

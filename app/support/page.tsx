@@ -1,22 +1,17 @@
 "use client";
 import { useState } from "react";
-import {
-  MessageSquare,
-  Send,
-  CheckCircle,
-  AlertTriangle,
-} from "lucide-react";
 import { addSupportTicket, generateId } from "@/lib/utils";
 import type { SupportCategory } from "@/types";
+import { MessageSquare, Send, CheckCircle, AlertTriangle } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
 const CATEGORIES: { value: SupportCategory; label: string; desc: string }[] = [
-  { value: "account", label: "Account issue", desc: "Problems signing in, accessing your account" },
+  { value: "account", label: "Account issue", desc: "Problems signing in or accessing your account" },
   { value: "checklist", label: "Checklist question", desc: "Questions about a task or your roadmap" },
   { value: "document", label: "Document confusion", desc: "Confused about a document or form" },
   { value: "housing", label: "Housing concern", desc: "Worried about your accommodation situation" },
-  { value: "partner", label: "Partner complaint", desc: "Issue with a recommended service or partner" },
-  { value: "scam", label: "Scam concern", desc: "Worried you may have been targeted by a scam" },
+  { value: "partner", label: "Partner complaint", desc: "Issue with a recommended service" },
+  { value: "scam", label: "Scam concern", desc: "Worried you may have been targeted" },
   { value: "other", label: "Something else", desc: "Any other question or concern" },
 ];
 
@@ -49,20 +44,17 @@ export default function SupportPage() {
 
   return (
     <Navigation>
-      <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-navy">Get support</h1>
-              <p className="text-sm text-muted">Tell us what you need help with.</p>
-            </div>
+      <div className="max-w-2xl mx-auto space-y-5 animate-fade-in">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center">
+            <MessageSquare className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-navy">Get support</h1>
+            <p className="text-xs text-muted">We read every message and aim to reply within 2 working days.</p>
           </div>
         </div>
 
-        {/* Disclaimer */}
         <div className="disclaimer-box flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-muted shrink-0 mt-0.5" />
           <p>{DISCLAIMER}</p>
@@ -73,7 +65,7 @@ export default function SupportPage() {
             <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-4" />
             <h2 className="text-lg font-bold text-navy mb-2">Message received!</h2>
             <p className="text-sm text-muted max-w-xs mx-auto">
-              Thank you. We read every message and aim to respond within 2 working days. For urgent issues, please contact your university support service.
+              Thank you. We aim to respond within 2 working days. For urgent issues, contact your university support service.
             </p>
           </div>
         ) : (
@@ -88,8 +80,8 @@ export default function SupportPage() {
                     onClick={() => setCategory(c.value)}
                     className={`text-left p-3 rounded-xl border-2 transition-all ${
                       category === c.value
-                        ? "border-primary bg-brand-50"
-                        : "border-border bg-white hover:border-primary/30"
+                        ? "border-primary bg-teal-50"
+                        : "border-border bg-white hover:border-primary/40"
                     }`}
                   >
                     <p className="text-sm font-semibold text-navy">{c.label}</p>
@@ -101,14 +93,7 @@ export default function SupportPage() {
 
             <div>
               <label className="block text-sm font-medium text-navy mb-1.5">Your email address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input-field"
-                placeholder="you@example.com"
-                required
-              />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" placeholder="you@example.com" required />
             </div>
 
             <div>
@@ -118,12 +103,10 @@ export default function SupportPage() {
                 onChange={(e) => setDescription(e.target.value)}
                 className="input-field resize-none"
                 rows={5}
-                placeholder="Please describe your situation as clearly as you can. The more detail you provide, the better we can help."
+                placeholder="Please describe your situation as clearly as you can..."
                 required
               />
-              <p className="text-xs text-muted mt-1">
-                Do not include sensitive personal information such as passport numbers, bank details, or passwords.
-              </p>
+              <p className="text-xs text-muted mt-1">Do not include sensitive personal information such as passport numbers, bank details, or passwords.</p>
             </div>
 
             <button
@@ -131,11 +114,7 @@ export default function SupportPage() {
               disabled={loading || !category || !description || !email}
               className="btn-primary w-full justify-center disabled:opacity-50"
             >
-              {loading ? (
-                <>Sending...</>
-              ) : (
-                <><Send className="w-4 h-4" /> Send message</>
-              )}
+              {loading ? "Sending..." : <><Send className="w-4 h-4" /> Send message</>}
             </button>
           </form>
         )}

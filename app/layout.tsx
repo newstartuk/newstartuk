@@ -2,25 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NewStart UK — Your UK Journey Starts Here",
+  title: "NewStart UK — Your UK Settlement Guide",
   description:
-    "NewStart UK helps international students settle into the UK — with a personalised 90-day checklist, plain-English guidance, and scam alerts.",
-  keywords: "international students, UK settlement, student checklist, UK arrival, NHS, bank account UK, council tax student",
+    "NewStart UK helps international students settle into the UK within 90 days — personalised checklists, plain-English guidance, and local support.",
+  icons: { icon: "/favicon.svg" },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-      </head>
-      <body className="bg-civic-50 min-h-screen">
-        {children}
-      </body>
+      <body className="bg-background text-navy antialiased">{children}</body>
     </html>
   );
 }

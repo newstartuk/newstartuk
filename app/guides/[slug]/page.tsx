@@ -4,15 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { GUIDANCE_PAGES } from "@/lib/guidance-data";
 import { SEED_TASKS } from "@/lib/seed-data";
-import {
-  ChevronLeft,
-  BookOpen,
-  AlertTriangle,
-  ExternalLink,
-  CheckCircle,
-  Info,
-  ArrowRight,
-} from "lucide-react";
+import { ChevronLeft, AlertTriangle, ExternalLink, ArrowRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
 export default function GuideArticlePage() {
@@ -30,52 +22,60 @@ export default function GuideArticlePage() {
       <Navigation>
         <div className="max-w-3xl mx-auto text-center py-20">
           <h1 className="text-lg font-bold text-navy mb-2">Guide not found</h1>
-          <Link href="/guides" className="text-sm text-primary hover:underline">Back to guides</Link>
+          <Link href="/guides" className="text-sm text-primary hover:underline">← Back to guides</Link>
         </div>
       </Navigation>
     );
   }
 
-  const relatedTasks = SEED_TASKS.filter((t) =>
-    guide.relatedTaskIds.includes(t.taskId)
-  );
+  const relatedTasks = SEED_TASKS.filter((t) => guide.relatedTaskIds.includes(t.taskId));
+
+  const CATEGORY_COLORS: Record<string, string> = {
+    Documents: "text-blue-600 bg-blue-50 border-blue-200",
+    Accommodation: "text-amber-600 bg-amber-50 border-amber-200",
+    Money: "text-green-600 bg-green-50 border-green-200",
+    Health: "text-red-500 bg-red-50 border-red-200",
+    University: "text-purple-600 bg-purple-50 border-purple-200",
+    Work: "text-pink-600 bg-pink-50 border-pink-200",
+    Safety: "text-orange-600 bg-orange-50 border-orange-200",
+    "Local Life": "text-teal-600 bg-teal-50 border-teal-200",
+    "Local Admin": "text-slate-600 bg-slate-50 border-slate-200",
+    Growth: "text-indigo-600 bg-indigo-50 border-indigo-200",
+    Transport: "text-cyan-600 bg-cyan-50 border-cyan-200",
+  };
 
   return (
     <Navigation>
-      <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-        {/* Back */}
+      <div className="max-w-3xl mx-auto space-y-5 animate-fade-in">
         <Link href="/guides" className="inline-flex items-center gap-1 text-sm text-muted hover:text-primary transition-colors">
-          <ChevronLeft className="w-4 h-4" /> Back to guides
+          <ChevronLeft className="w-4 h-4" /> Back to guidance library
         </Link>
 
-        {/* Header */}
         <div>
-          <p className="text-xs text-muted mb-2">{guide.category}</p>
-          <h1 className="text-2xl font-bold text-navy leading-snug mb-2">{guide.title}</h1>
+          <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${CATEGORY_COLORS[guide.category] ?? "text-muted bg-civic-50"}`}>
+            {guide.category}
+          </span>
+          <h1 className="text-2xl font-bold text-navy mt-3 mb-2 leading-snug">{guide.title}</h1>
           <p className="text-sm text-civic-600 leading-relaxed">{guide.description}</p>
           <p className="text-xs text-muted mt-2">Last reviewed: {guide.lastReviewed}</p>
         </div>
 
         {/* What this is */}
         <div className="card">
-          <h2 className="text-base font-semibold text-navy mb-2 flex items-center gap-2">
-            <Info className="w-4 h-4 text-primary" /> What this is
-          </h2>
+          <h2 className="section-title">What this is</h2>
           <p className="text-sm text-civic-700 leading-relaxed">{guide.whatThisIs}</p>
         </div>
 
         {/* Why it matters */}
         <div className="card">
-          <h2 className="text-base font-semibold text-navy mb-2 flex items-center gap-2">
-            <Info className="w-4 h-4 text-primary" /> Why it matters
-          </h2>
+          <h2 className="section-title">Why it matters</h2>
           <p className="text-sm text-civic-700 leading-relaxed">{guide.whyItMatters}</p>
         </div>
 
         {/* What to prepare */}
         {guide.whatToPrepare.length > 0 && (
           <div className="card">
-            <h2 className="text-base font-semibold text-navy mb-3">What to prepare</h2>
+            <h2 className="section-title">What to prepare</h2>
             <ul className="space-y-2">
               {guide.whatToPrepare.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-civic-700">
@@ -88,24 +88,26 @@ export default function GuideArticlePage() {
         )}
 
         {/* Steps to take */}
-        <div className="card">
-          <h2 className="text-base font-semibold text-navy mb-3">Steps to take</h2>
-          <ol className="space-y-3">
-            {guide.stepsToTake.map((step, i) => (
-              <li key={i} className="flex gap-3 text-sm text-civic-700">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-brand-50 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
-                  {i + 1}
-                </span>
-                {step}
-              </li>
-            ))}
-          </ol>
-        </div>
+        {guide.stepsToTake.length > 0 && (
+          <div className="card">
+            <h2 className="section-title">Steps to take</h2>
+            <ol className="space-y-3">
+              {guide.stepsToTake.map((step, i) => (
+                <li key={i} className="flex gap-3 text-sm text-civic-700">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-teal-50 border border-teal-200 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
 
         {/* Common mistakes */}
         {guide.commonMistakes.length > 0 && (
           <div className="card border-amber-200 bg-amber-50">
-            <h2 className="text-base font-semibold text-amber-700 mb-3 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-amber-700 mb-3 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> Common mistakes to avoid
             </h2>
             <ul className="space-y-2">
@@ -121,8 +123,8 @@ export default function GuideArticlePage() {
 
         {/* Safety warning */}
         {guide.safetyWarning && (
-          <div className="card border-red-200 bg-red-50">
-            <h2 className="text-base font-semibold text-red-700 mb-2 flex items-center gap-2">
+          <div className="card border-2 border-red-200 bg-red-50">
+            <h2 className="text-sm font-bold text-red-700 mb-2 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> Important safety warning
             </h2>
             <p className="text-sm text-red-600 leading-relaxed">{guide.safetyWarning}</p>
@@ -133,26 +135,26 @@ export default function GuideArticlePage() {
         {guide.sourceSignpost && (
           <div className="card bg-civic-50">
             <h2 className="text-xs font-semibold text-muted uppercase mb-1">Official sources</h2>
-            <p className="text-sm text-civic-600">{guide.sourceSignpost}</p>
+            <p className="text-sm text-civic-600 leading-relaxed">{guide.sourceSignpost}</p>
           </div>
         )}
 
         {/* Related tasks */}
         {relatedTasks.length > 0 && (
           <div className="card">
-            <h2 className="text-base font-semibold text-navy mb-3">Related checklist tasks</h2>
+            <h2 className="section-title">Related checklist tasks</h2>
             <div className="space-y-2">
               {relatedTasks.map((t) => (
                 <Link
                   key={t.taskId}
                   href={`/tasks/${t.taskId}`}
-                  className="flex items-center justify-between gap-3 p-3 rounded-xl hover:bg-civic-50 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-civic-50 transition-colors group"
                 >
                   <div>
                     <p className="text-sm font-medium text-navy">{t.title}</p>
-                    <p className="text-xs text-muted">{t.category}</p>
+                    <p className="text-xs text-muted">{t.stage} · {t.category}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-muted group-hover:text-primary transition-colors shrink-0" />
+                  <ArrowRight className="w-4 h-4 text-muted group-hover:text-primary transition-colors" />
                 </Link>
               ))}
             </div>
@@ -161,7 +163,7 @@ export default function GuideArticlePage() {
 
         {/* Disclaimer */}
         <div className="disclaimer-box">
-          <p className="font-medium text-civic-700 mb-1">Disclaimer</p>
+          <p className="font-semibold text-navy mb-1">Disclaimer</p>
           <p>{guide.disclaimer}</p>
         </div>
       </div>
