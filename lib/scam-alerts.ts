@@ -24,8 +24,8 @@ export const SCAM_ALERTS: ScamAlert[] = [
   },
   {
     id: "document-phishing",
-    title: "⚠️ Document phishing — fake BRP and visa renewal emails",
-    body: "Emails or texts claiming to be from UKVI or the Home Office, asking you to 'verify your BRP details', 'renew your visa', or 'update your immigration status'. They link to fake government websites designed to steal your personal information. Red flags: unexpected contact, urgency ('your visa will be cancelled within 48 hours'), links to non-gov.uk websites. What to do: the Home Office will never contact you by email about your visa. Report phishing to the National Cyber Security Centre: report.ncsc.gov.uk.",
+    title: "⚠️ Document phishing — fake eVisa and visa renewal emails",
+    body: "Emails or texts claiming to be from UKVI or the Home Office, asking you to 'verify your eVisa details', 'renew your visa', or 'update your immigration status'. They link to fake government websites designed to steal your personal information. Red flags: unexpected contact, urgency ('your visa will be cancelled within 48 hours'), links to non-gov.uk websites. What to do: the Home Office will never contact you by email about your visa. Report phishing to the National Cyber Security Centre: report.ncsc.gov.uk.",
     category: "Documents",
     severity: "medium",
   },

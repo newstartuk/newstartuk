@@ -110,7 +110,7 @@ const RESPONSES: Record<DocType, DocHelperResponse> = {
       "Your full name, date of birth, and gender",
       "Your UK address (use your accommodation address, even if you are not sure how long you will be there)",
       "Your previous address in your home country",
-      "Your NHS number if you have one already (check your BRP letter or previous NHS letters)",
+      "Your NHS number if you have one already (find it at nhs.uk/nhs-services/nhs-number or your UKVI account)",
       "Details of any ongoing medical conditions, medications, or allergies",
       "The name and address of your previous GP (if you had one in the UK)",
       "Emergency contact details",

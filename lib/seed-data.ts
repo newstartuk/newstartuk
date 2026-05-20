@@ -87,7 +87,8 @@ export const SEED_TASKS: Task[] = [
       "UK border control may ask to see your passport, visa, and CAS. You will need copies of these documents to open bank accounts, register with a GP, and prove your right to study. Losing originals abroad without copies is extremely difficult to fix.",
     whatToPrepare: [
       "Passport (valid for at least 6 months beyond your planned stay)",
-      "BRP (Biometric Residence Permit) if already issued",
+      "UKVI online account login (gov.uk/prove-immigration-status)",
+      "Evidence of your eVisa (digital immigration status via UKVI account)",
       "CAS letter from your university",
       "Travel insurance certificate",
       "University acceptance letter",
@@ -179,7 +180,7 @@ export const SEED_TASKS: Task[] = [
   },
   {
     taskId: "STU_PRE_006",
-    title: "Check your visa and BRP entry clearance details",
+    title: "Check your visa and eVisa details",
     summary: "Confirm your student visa details are correct before you travel to avoid problems at the UK border.",
     stage: "PRE",
     category: "Documents",
@@ -189,28 +190,30 @@ export const SEED_TASKS: Task[] = [
     aiHelperAllowed: false,
     estimatedMinutes: 20,
     whyItMatters:
-      "Your visa and BRP are your legal proof of right to be in the UK. Border Force officers can ask you to prove the purpose of your visit. Having your documents in order means a smooth arrival — and avoids the stress of being questioned or delayed.",
+      "Your visa and eVisa are your legal proof of right to be in the UK. Border Force officers can ask you to prove the purpose of your visit. Having your documents in order means a smooth arrival — and avoids the stress of being questioned or delayed.",
     whatToPrepare: [
       "Passport with valid student visa vignette or stamp",
-      "BRP collection notice letter (if your BRP will be collected from a Post Office)",
+      "UKVI online account access (gov.uk/prove-immigration-status) — your eVisa is your digital immigration status",
+      "Evidence of UKVI online account registration (if you have set it up before arrival)",
       "CAS letter from your university",
       "Proof of funds (bank statements showing maintenance funds)",
     ],
     stepsToTake: [
       "Check that your passport has been stamped with a valid entry clearance vignette.",
-      "Read your BRP collection letter carefully — it tells you where and when to collect your BRP (usually within 10 days of arriving).",
-      "Note the deadline for BRP collection — missing it can result in fines.",
+      "Go to gov.uk/prove-immigration-status and sign in or create a UKVI online account.",
+      "Check your eVisa — this is your official digital proof of immigration status in the UK.",
+      "If you were issued a physical BRP before the eVisa transition, keep it safe as a backup. BRPs are no longer issued for new arrivals.",
       "Check that the name, date of birth, and visa details on your passport match your university records.",
     ],
     commonMistakes: [
-      "Not collecting the BRP within the stated deadline — this is a legal requirement.",
-      "Losing the BRP collection letter — you need it to collect your BRP.",
+      "Not setting up your UKVI online account — you need this to prove your immigration status.",
+      "Losing access to your UKVI account — keep your login details secure and backed up.",
       "Arriving with the wrong type of entry stamp — confirm you have the correct student entry clearance.",
     ],
     riskWarning:
       "If you have any concerns about your visa status, contact your university's international student support team immediately before travelling.",
     sourceSignpost:
-      "UKVI BRP collection: gov.uk/biometric-residence-permit | Student visa guidance: gov.uk/student-visa",
+      "UKVI eVisa / prove your immigration status: gov.uk/prove-immigration-status | Student visa guidance: gov.uk/student-visa | BRP holders (existing): gov.uk/biometric-residence-permit",
   },
   {
     taskId: "STU_PRE_007",
@@ -444,7 +447,7 @@ export const SEED_TASKS: Task[] = [
       "Being fully registered with your university is required to access your student loan, get your student ID, use the library, and claim your student status for discounts. Some universities require in-person check-in at specific times — missing this can affect your place.",
     whatToPrepare: [
       "Passport",
-      "BRP",
+      "eVisa / UKVI online account (gov.uk/prove-immigration-status)",
       "CAS letter",
       "Proof of address (your accommodation address)",
     ],
@@ -478,7 +481,7 @@ export const SEED_TASKS: Task[] = [
     whyItMatters:
       "Your student ID is your proof of student status — you need it for library access, exam entry, building access, and student discounts. Without completing registration, you may not be able to access your student loan or course materials.",
     whatToPrepare: [
-      "Passport and BRP",
+      "eVisa / UKVI online account (gov.uk/prove-immigration-status)",
       "University portal login",
       "Proof of address",
     ],
@@ -511,7 +514,7 @@ export const SEED_TASKS: Task[] = [
     whyItMatters:
       "Student bank accounts in the UK often come with free overdrafts (up to £1,000–£3,000 interest-free) and other perks. Choosing the right one early means you have a proper UK account for rent, part-time work wages, and student discounts.",
     whatToPrepare: [
-      "Your passport and BRP",
+      "eVisa / UKVI online account (gov.uk/prove-immigration-status)",
       "Proof of university enrolment (student ID or letter)",
       "Proof of UK address (tenancy agreement or accommodation letter)",
     ],
@@ -545,7 +548,7 @@ export const SEED_TASKS: Task[] = [
       "GP registration is free and gives you access to the full NHS. Without registering, you cannot book appointments, get prescriptions, or access hospital referrals when you need them. Some GP surgeries have long waiting lists — register early to avoid being without a doctor.",
     whatToPrepare: [
       "Your UK address",
-      "NHS number (if you have one already — check your BRP letter)",
+      "NHS number (if you have one already — find it at nhs.uk/nhs-services/nhs-number)",
       "Proof of address (tenancy agreement, utility bill, or bank statement)",
     ],
     stepsToTake: [
@@ -580,7 +583,7 @@ export const SEED_TASKS: Task[] = [
     whatToPrepare: ["Your NHS number (ask your GP when you register)", "Internet access to nhs.uk"],
     stepsToTake: [
       "Register with a GP to get your NHS number assigned (it will be posted to you).",
-      "If you already know your NHS number (from previous UK stays or your BRP letter), note it in your phone.",
+      "If you already know your NHS number (from previous UK stays or your UKVI account), note it in your phone. Make sure you can access your UKVI online account — you will need it to prove your immigration status throughout your stay.",
       "Read the NHS services guide at nhs.uk to understand: when to use 111, when to use 999, when to visit a pharmacy, and when to use A&E.",
       "Download the NHS App — it lets you order prescriptions, book appointments, and view your health records.",
     ],
@@ -798,7 +801,7 @@ export const SEED_TASKS: Task[] = [
       "A UK student bank account gives you a UK sort code and account number — essential for paying rent, receiving wages from part-time work, and proving your UK address to other services. Many accounts also offer an interest-free overdraft, which is useful as a safety net.",
     whatToPrepare: [
       "Passport or UK driving licence",
-      "BRP",
+      "eVisa / UKVI online account (gov.uk/prove-immigration-status)",
       "Proof of UK address (tenancy agreement, accommodation letter, or recent utility bill)",
       "Proof of student status (university letter or student ID)",
     ],
@@ -864,14 +867,14 @@ export const SEED_TASKS: Task[] = [
     whyItMatters:
       "Your National Insurance (NI) number is your unique tax reference number in the UK. You legally need it to work — employers use it to deduct the correct tax and National Insurance contributions from your wages. Without one, you could be taxed incorrectly or miss out on state pension contributions.",
     whatToPrepare: [
-      "Proof of the right to work in the UK (passport and BRP)",
+      "Proof of the right to work in the UK (passport with visa vignette and UKVI online account / eVisa)",
       "Proof of address",
       "Proof of student status",
     ],
     stepsToTake: [
       "If you have a pre-existing NI number (from a previous UK stay), note it in your records.",
       "If you do not: call the DWP NI number helpline on 0300 200 3500 to apply.",
-      "DWP will schedule an evidence interview — bring your passport and BRP.",
+      "DWP will schedule an evidence interview — bring your passport and UKVI online account or eVisa.",
       "Your NI number will be posted to you within 3–4 weeks of the interview.",
       "Once received, save it securely — you will need it for every job.",
     ],
@@ -959,11 +962,11 @@ export const SEED_TASKS: Task[] = [
     whyItMatters:
       "Your student visa has specific work conditions. Working more than you are allowed to can breach your visa conditions and risk your studies. At the same time, part-time work is a valuable part of the UK student experience — understanding your rights means you can work confidently and safely.",
     whatToPrepare: [
-      "Your BRP or visa vignette (to check your work conditions)",
+      "Your UKVI online account or passport with visa vignette (to check your work conditions)",
       "Internet access to check Home Office guidance",
     ],
     stepsToTake: [
-      "Check your BRP or visa vignette for your work conditions — the standard student visa allows up to 20 hours per week during term time.",
+      "Check your UKVI online account or passport with visa vignette for your work conditions — the standard student visa allows up to 20 hours per week during term time.",
       "Visit gov.uk/student-visa/work for the official guidance.",
       "Know your rights: you are entitled to National Minimum Wage, sick pay, and holiday pay from day one of any job.",
       "If your employer does not follow employment law, contact the Advisory, Conciliation and Arbitration Service (Acas).",

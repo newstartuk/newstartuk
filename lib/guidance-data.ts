@@ -12,7 +12,7 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
       "Most problems international students face in their first week in the UK — lost documents, money issues, accommodation confusion, no phone signal — are preventable with good preparation before travel. The 2–4 weeks before departure are the most important weeks of your entire settlement journey.",
     whatToPrepare: [
       "Passport valid for at least 6 months beyond your planned UK departure",
-      "BRP collection letter",
+      "UKVI online account / eVisa setup confirmation",
       "CAS letter from your university",
       "Proof of accommodation",
       "Travel insurance",
@@ -51,14 +51,14 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
     whyItMatters:
       "The first 24 hours are overwhelming. You are tired from travel, in an unfamiliar city, with a new currency, possibly a new language, and a long list of things to do. Knowing exactly what to prioritse — and what can wait — means you make good decisions instead of expensive or stressful ones.",
     whatToPrepare: [
-      "Passport, BRP collection letter, and CAS letter in your hand luggage",
+      "Passport, UKVI account confirmation (eVisa setup), and CAS letter in your hand luggage",
       "Airport-to-accommodation transport pre-booked and confirmed",
       "Accommodation address saved in your phone and on a printed card",
       "UK currency for immediate needs",
       "Charged phone with your accommodation's Wi-Fi password if available",
     ],
     stepsToTake: [
-      "Go through border control — have your passport, BRP letter, and CAS ready.",
+      "Go through border control — have your passport, UKVI account access (eVisa), and CAS ready.",
       "Collect your luggage and go through customs.",
       "Follow your pre-planned route to your accommodation.",
       "Once inside: check the accommodation condition, photograph everything, and report any issues immediately.",
@@ -162,7 +162,7 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
       "A UK bank account is essential for paying rent, receiving wages from part-time work, and accessing student discounts. Many students underestimate how long the process takes — banks can take 1–2 weeks to process an account. Starting the research process in your first week means you are ready to apply as soon as you have proof of UK address.",
     whatToPrepare: [
       "Passport or UK driving licence",
-      "BRP (Biometric Residence Permit)",
+      "eVisa (digital immigration status via your UKVI online account)",
       "Proof of UK address (tenancy agreement, accommodation letter, or recent utility bill)",
       "Proof of student status (university letter or student ID)",
       "University acceptance or enrolment letter",
@@ -201,7 +201,7 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
     whatToPrepare: [
       "Your UK address",
       "Any previous medical records or summaries from your home country",
-      "Your NHS number if you have one (check your BRP letter or previous NHS correspondence)",
+      "Your NHS number if you have one (find it at nhs.uk/nhs-services/nhs-number or your UKVI account)",
     ],
     stepsToTake: [
       "Search for NHS GP surgeries near your accommodation: nhs.uk/service-search/find-a-gp",
@@ -511,12 +511,12 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
     whyItMatters:
       "Part-time work can enrich your UK experience, help with living costs, and build your CV. But working too many hours can damage your studies, and some employers exploit international students who do not know their rights. Understanding both sides means you can work confidently and safely.",
     whatToPrepare: [
-      "Your BRP (to check your work conditions)",
+      "Your UKVI online account or passport with visa vignette (to check your work conditions)",
       "An understanding of your visa hour limits",
       "A UK-format CV",
     ],
     stepsToTake: [
-      "Check your BRP for your work conditions — standard student visa allows up to 20 hours per week during term time.",
+      "Check your UKVI online account or passport with visa vignette for your work conditions — standard student visa allows up to 20 hours per week during term time.",
       "Know your rights: you are entitled to National Minimum Wage, sick pay, and holiday pay from day one.",
       "Get a National Insurance number as soon as possible if you plan to work (apply via DWP).",
       "Use your university careers service — they have exclusive job listings and can review your CV.",
@@ -546,14 +546,14 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
     whyItMatters:
       "Your National Insurance number is your unique personal reference number for tax and National Insurance contributions in the UK. You legally need it to work — employers use it to make sure the correct tax and National Insurance is deducted from your wages. Without one, you could be taxed incorrectly or miss out on state pension contributions.",
     whatToPrepare: [
-      "Proof of the right to work in the UK (passport and BRP)",
+      "Proof of the right to work in the UK (passport with vignette and UKVI online account / eVisa)",
       "Proof of address",
       "Proof of student status",
     ],
     stepsToTake: [
       "If you have a pre-existing NI number from a previous UK stay, note it — you do not need to reapply.",
       "If you do not: call the DWP NI number helpline on 0300 200 3500.",
-      "DWP will schedule an evidence interview — bring your passport and BRP.",
+      "DWP will schedule an evidence interview — bring your passport and UKVI online account or eVisa.",
       "Your NI number will be posted to you within 3–4 weeks.",
       "Save your NI number securely — you will need it for every job and for your tax returns.",
     ],
@@ -579,12 +579,12 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
     whyItMatters:
       "Employers are legally required to check that you have the right to work in the UK before hiring you. As an international student, your right to work is tied to your visa conditions. Understanding what employers need to see — and your rights in the process — prevents misunderstandings and discrimination.",
     whatToPrepare: [
-      "Your BRP (Biometric Residence Permit) or passport with your visa vignette",
+      "UKVI online account / eVisa or passport with your visa vignette",
       "Your NI number (needed for PAYE tax)",
     ],
     stepsToTake: [
       "Know your work hour limit from your visa conditions — typically 20 hours per week during term time.",
-      "Give your employer your BRP and passport to check your right to work.",
+      "Give your employer your UKVI online account or passport with visa vignette to check your right to work.",
       "If you have settled or pre-settled status under the EU Settlement Scheme, you may not need a visa — check with your employer.",
       "Your employer will use the Home Office online right-to-work checking service.",
       "You do not need to share your immigration status with your employer beyond what is needed for the right-to-work check.",
@@ -619,7 +619,7 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
       "Always research the employer before applying — check their website, reviews, and Companies House registration.",
       "Verify job offers through official channels — call the company on their publicly listed number, not a number provided by the recruiter.",
       "Never pay money to get a job — this is always a scam.",
-      "Never share your passport, BRP, or bank details unless you are certain the employer is legitimate.",
+      "Never share your passport, UKVI account details, or bank details unless you are certain the employer is legitimate.",
       "If you are asked to receive money into your bank account and forward it elsewhere — this is money laundering. Refuse and report it.",
       "Report suspected scams to Action Fraud on 0300 123 2040.",
     ],
