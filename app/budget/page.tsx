@@ -74,7 +74,8 @@ export default function BudgetPage() {
   ];
 
   const addItem = () => {
-    if (!form.label.trim() || !form.amount) return;
+    const parsedAmount = parseFloat(form.amount);
+    if (!form.label.trim() || form.amount === "" || isNaN(parsedAmount) || parsedAmount < 0) return;
     const newItem: BudgetItem = {
       id: `item_${Date.now()}`,
       label: form.label.trim(),
