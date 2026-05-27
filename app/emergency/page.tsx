@@ -130,8 +130,9 @@ export default function EmergencyPage() {
               "Register with your university security alerts system",
               "Share your accommodation address with a trusted person back home",
               "Download what3words app — emergency services can find you anywhere in the UK",
-              "Know your nearest police station (查找最近的警局)",
-              "Keep copies of your passport and BRP in a safe place — not on you at all times",
+              "Know your nearest police station — find it now and save the address",
+
+              "Keep copies of your passport and immigration documents in a safe place — store originals securely and carry only what you need",
             ].map((tip) => (
               <div key={tip} className="flex items-start gap-2.5 p-3 bg-civic-50 rounded-xl">
                 <span className="text-primary shrink-0 mt-0.5">✓</span>

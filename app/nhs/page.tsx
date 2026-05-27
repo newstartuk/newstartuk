@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import { Shield, Phone, MapPin, Clock, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
 
-const GP_SEARCH_URL = "https://www.nhs.uk/service-search/find-a-guy-s-or-trivial";
+const GP_SEARCH_URL = "https://www.nhs.uk/service-search/find-a-gp";
 
 export default function NHSPage() {
   const [registered, setRegistered] = useState(false);

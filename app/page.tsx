@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Check,
   Star,
+  Scale,
 } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
 
@@ -52,9 +53,9 @@ const FEATURES = [
     bg: "bg-blue-50",
   },
   {
-    icon: Star,
-    title: "Trusted & Free",
-    desc: "Built for students, by people who understand the UK. Always free. No surprises, no hidden costs.",
+    icon: Scale,
+    title: "Neutral & Compliant",
+    desc: "Information and signposting — not advice. We point you to official sources so you can make informed decisions.",
     color: "text-green-500",
     bg: "bg-green-50",
   },
@@ -110,10 +111,10 @@ export default function LandingPage() {
           Built for international students arriving in the UK
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-navy leading-tight mb-5 max-w-3xl mx-auto">
-          Your UK journey<br className="hidden sm:block" /> starts here.
+          Your UK settlement journey<br className="hidden sm:block" /> starts here.
         </h1>
         <p className="text-lg text-civic-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-          NewStart UK turns the chaos of your first 90 days into a clear, guided checklist — from airport to settled. Personalised for you, built around your arrival date, and always free.
+          NewStart UK helps you navigate your first 90 days in the UK — from airport to settled. A clear, guided checklist, personalised for your situation, and pointing you to the right official sources at every step.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/signup" className="btn-primary text-base px-8 py-3 justify-center">
@@ -158,7 +159,7 @@ export default function LandingPage() {
                   "Everything you need to do, in the right order.",
                   "Built around your city, university, and accommodation type.",
                   "Updated as you progress — your roadmap, your pace.",
-                  "With plain-English guidance for every single task.",
+                  "With plain-English guidance and official source links for every task.",
                 ].map((line, i) => (
                   <p key={i} className="text-sm text-civic-600 flex items-start gap-2">
                     <span className="text-green-500 mt-0.5"><Check className="w-4 h-4" /></span>
@@ -211,14 +212,33 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Trust & Compliance note */}
+      <section className="max-w-3xl mx-auto px-4 py-10">
+        <div className="card bg-teal-50 border-primary/20">
+          <h2 className="text-sm font-bold text-navy mb-3 flex items-center gap-2">
+            <Scale className="w-4 h-4 text-primary" />
+            How we work — and how we don't
+          </h2>
+          <p className="text-sm text-civic-700 leading-relaxed mb-3">
+            NewStart UK is a settlement support platform — not a legal, immigration, financial, or professional advice service. We help you understand what you need to do and point you to the official sources that make the decisions.
+          </p>
+          <p className="text-sm text-civic-700 leading-relaxed mb-3">
+            Our content is built around official GOV.UK guidance, NHS guidance, and university-published information. It is reviewed before publication — but it does not substitute for advice from a qualified immigration solicitor, financial adviser, or other regulated professional.
+          </p>
+          <p className="text-sm text-civic-700 leading-relaxed">
+            <strong>Always check your specific conditions</strong> — your eVisa, visa vignette, university enrolment letter, or offer paperwork are the authoritative source for your personal circumstances.
+          </p>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="max-w-3xl mx-auto px-4 py-16 text-center">
+      <section className="max-w-3xl mx-auto px-4 pb-16 text-center">
         <div className="bg-primary rounded-2xl p-8 sm:p-12 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
             Your first 90 days start now.
           </h2>
           <p className="text-teal-100 text-sm leading-relaxed mb-8 max-w-xl mx-auto">
-            Join hundreds of international students who are using NewStart UK to settle in confidently. Free forever. No credit card needed.
+            Join international students using NewStart UK to settle in confidently. Free forever. No credit card needed.
           </p>
           <Link href="/signup" className="inline-flex items-center gap-2 bg-white text-primary font-bold text-sm px-8 py-3 rounded-xl hover:bg-teal-50 transition-colors">
             Create your roadmap now <ArrowRight className="w-4 h-4" />
@@ -239,7 +259,7 @@ export default function LandingPage() {
             <Link href="/signup" className="hover:text-primary">Sign up</Link>
           </div>
           <p className="text-center text-xs text-muted">
-            © 2026 NewStart UK. Made with care for international students arriving in the UK.
+            © 2026 NewStart UK. NewStart UK is an independent platform and is not affiliated with the UK government, the NHS, or any university.
           </p>
         </div>
       </footer>

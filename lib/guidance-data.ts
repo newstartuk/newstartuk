@@ -516,7 +516,7 @@ export const GUIDANCE_PAGES: GuidanceArticle[] = [
       "A UK-format CV",
     ],
     stepsToTake: [
-      "Check your UKVI online account or passport with visa vignette for your work conditions — standard student visa allows up to 20 hours per week during term time.",
+      "Check your UKVI online account or passport with visa vignette for your work conditions — your visa endorsement states your specific hour limit. The standard Student Visa allows up to 20 hours per week during term time, but some visas allow 10 hours or have other restrictions. Always check your own visa conditions and your university's guidance.",
       "Know your rights: you are entitled to National Minimum Wage, sick pay, and holiday pay from day one.",
       "Get a National Insurance number as soon as possible if you plan to work (apply via DWP).",
       "Use your university careers service — they have exclusive job listings and can review your CV.",
