@@ -19,6 +19,7 @@ import {
   Building2,
   TrendingUp,
 } from "lucide-react";
+import MobileNav from "./MobileNav";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -278,9 +279,12 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
         </header>
 
         {/* Main content — shifts when sidebar collapses */}
-        <main className={`flex-1 px-4 py-6 md:pl-8 md:pr-8 max-w-5xl w-full mx-auto ${mainMargin} transition-all duration-200`}>
+        <main className={`flex-1 px-4 py-6 pb-24 md:pl-8 md:pr-8 max-w-5xl w-full mx-auto ${mainMargin} transition-all duration-200`}>
           {children}
         </main>
+
+        {/* Mobile bottom tab bar */}
+        <MobileNav onMoreClick={() => setMobileOpen(true)} />
       </div>
     </div>
   );

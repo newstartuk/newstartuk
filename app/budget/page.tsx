@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip,
   ResponsiveContainer, Legend,
 } from "recharts";
-import { TrendingUp, Trash2, Plus, AlertTriangle } from "lucide-react";
+import { TrendingUp, Trash2, Plus, AlertTriangle, Printer } from "lucide-react";
 
 const STORAGE_KEY = "nsk_budget";
 
@@ -102,18 +102,34 @@ export default function BudgetPage() {
   return (
     <Navigation>
       <div className="max-w-5xl mx-auto space-y-5 animate-fade-in">
+        {/* Print-only header */}
+        <div className="hidden print:block mb-6">
+          <h1 className="text-2xl font-bold text-navy">NewStart UK — Budget Planner</h1>
+          <p className="text-sm text-muted">Generated on {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p>
+          <div className="mt-4 border-t border-border" />
+        </div>
+
         {/* Header */}
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3 no-print">
           <div>
             <h1 className="text-xl font-bold text-navy">Budget Planner</h1>
             <p className="text-sm text-muted mt-0.5">Plan your monthly income and expenses</p>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary text-sm shrink-0"
-          >
-            <Plus className="w-4 h-4" /> Add item
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => window.print()}
+              className="btn-ghost text-sm hidden print:hidden"
+              aria-label="Save budget as PDF"
+            >
+              <Printer className="w-4 h-4" /> Save as PDF
+            </button>
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary text-sm"
+            >
+              <Plus className="w-4 h-4" /> Add item
+            </button>
+          </div>
         </div>
 
         {/* Summary cards */}

@@ -234,6 +234,43 @@ h1, h2, h3, h4 {
   outline-offset: 2px;
 }
 
+/* ─── Print / PDF Export ─────────────────────────────────────────────────────── */
+@media print {
+  nav,
+  .no-print,
+  header,
+  button:not(.print-show),
+  a:not(.print-show) {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: #102A43;
+    font-size: 12pt;
+  }
+
+  .card,
+  .bg-white {
+    background: white !important;
+    border: 1px solid #D9E2EC;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .text-primary { color: #0B7285 !important; }
+  .text-navy    { color: #102A43 !important; }
+  .text-muted   { color: #627D98 !important; }
+
+  h1 { font-size: 22pt; margin-bottom: 8pt; }
+  h2 { font-size: 14pt; margin-bottom: 6pt; margin-top: 12pt; }
+
+  @page {
+    margin: 1.5cm 2cm;
+    size: A4;
+  }
+}
+
 /* ─── Utility ────────────────────────────────────────────────────────────────── */
 .text-muted { color: var(--color-muted); }
 .text-navy { color: var(--color-navy); }
