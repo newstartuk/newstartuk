@@ -22,6 +22,24 @@
   --color-civic-700: #334E68;
 }
 
+/* ─── Loading Skeleton ─────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-civic-100) 25%,
+    var(--color-civic-50) 50%,
+    var(--color-civic-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
 /* ─── Base ─────────────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;

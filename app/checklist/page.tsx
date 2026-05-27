@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import ChecklistSkeleton from "@/components/ChecklistSkeleton";
 
 const STAGES: { value: TaskStage | "ALL"; label: string }[] = [
   { value: "ALL", label: "All stages" },
@@ -57,6 +58,7 @@ const STATUS_FILTER: { value: TaskStatus | "ALL"; label: string }[] = [
 ];
 
 export default function ChecklistPage() {
+  const [mounted, setMounted] = useState(false);
   const [stageFilter, setStageFilter] = useState<TaskStage | "ALL">("ALL");
   const [categoryFilter, setCategoryFilter] = useState<TaskCategory | "ALL">("ALL");
   const [statusFilter, setStatusFilter] = useState<TaskStatus | "ALL">("ALL");
@@ -64,8 +66,11 @@ export default function ChecklistPage() {
   const [userTasks, setUserTasks] = useState<ReturnType<typeof getUserTasks>>([]);
 
   useEffect(() => {
+    setMounted(true);
     setUserTasks(getUserTasks());
   }, []);
+
+  if (!mounted) return <ChecklistSkeleton />;
 
   const refresh = () => setUserTasks(getUserTasks());
 
@@ -117,7 +122,14 @@ export default function ChecklistPage() {
         </div>
 
         {/* Progress bar */}
-        <div className="h-2.5 bg-civic-100 rounded-full overflow-hidden">
+        <div
+          className="h-2.5 bg-civic-100 rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuenow={total > 0 ? Math.round((completed / total) * 100) : 0}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Checklist progress: ${completed} of ${total} required tasks complete`}
+        >
           <div
             className="h-full bg-primary rounded-full transition-all duration-500"
             style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%` }}
@@ -194,7 +206,7 @@ export default function ChecklistPage() {
 
         {/* Task list */}
         {filtered.length === 0 ? (
-          <div className="card text-center py-12">
+          <div className="card text-center py-12" role="status" aria-live="polite">
             <CheckCircle className="w-10 h-10 text-muted mx-auto mb-3 opacity-50" />
             <p className="text-sm text-muted">No tasks match your filters.</p>
           </div>

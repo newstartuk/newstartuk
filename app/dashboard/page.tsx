@@ -18,6 +18,7 @@ import {
   Shield,
   BookOpen,
 } from "lucide-react";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -41,7 +42,8 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [router]);
 
-  if (!mounted || !user) return null;
+  if (!mounted) return <DashboardSkeleton />;
+  if (!user) return null;
 
   const stage = calculateStage(profile?.arrivalDate);
   const score = calculateReadinessScore(SEED_TASKS, userTasks);
@@ -79,8 +81,8 @@ export default function DashboardPage() {
         <div className="grid sm:grid-cols-2 gap-4">
           {/* Score ring */}
           <div className="card flex items-center gap-5">
-            <div className="relative shrink-0">
-              <svg width="100" height="100" viewBox="0 0 100 100">
+            <div className="relative shrink-0" role="img" aria-label={`UK Readiness Score: ${score.totalScore}% — ${score.completedTasks} of ${score.totalRequiredTasks} tasks complete`}>
+              <svg width="100" height="100" viewBox="0 0 100 100" aria-hidden="true">
                 <circle cx="50" cy="50" r="40" fill="none" stroke="#D9E2EC" strokeWidth="10" />
                 <circle
                   cx="50" cy="50" r="40" fill="none"
@@ -146,7 +148,14 @@ export default function DashboardPage() {
                   <span className="text-xs font-medium text-navy">{cat.category}</span>
                   <span className="text-xs text-muted">{cat.completed}/{cat.total} tasks</span>
                 </div>
-                <div className="h-2 bg-civic-100 rounded-full overflow-hidden">
+                <div
+                  className="h-2 bg-civic-100 rounded-full overflow-hidden"
+                  role="progressbar"
+                  aria-valuenow={cat.percentage}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`${cat.category}: ${cat.completed} of ${cat.total} tasks complete`}
+                >
                   <div
                     className="h-full bg-primary rounded-full transition-all duration-700"
                     style={{ width: `${cat.percentage}%` }}
