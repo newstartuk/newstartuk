@@ -54,6 +54,28 @@ const ENGLISH_OPTIONS: { value: EnglishLevel; label: string; desc: string }[] = 
 
 const STEPS = ["Arrival type", "When are you arriving?", "City & university", "Accommodation", "Optional details"];
 
+const ONSBOARDING_STORAGE_KEY = "nsk_onboarding_state";
+
+function saveOnboardingState(state: { step: number; profile: Partial<ArrivalProfile> }) {
+  try {
+    localStorage.setItem(ONSBOARDING_STORAGE_KEY, JSON.stringify(state));
+  } catch { /* ignore */ }
+}
+
+function loadOnboardingState(): { step: number; profile: Partial<ArrivalProfile> } | null {
+  try {
+    const raw = localStorage.getItem(ONSBOARDING_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.step === "number") return parsed;
+    return null;
+  } catch { return null; }
+}
+
+function clearOnboardingState() {
+  try { localStorage.removeItem(ONSBOARDING_STORAGE_KEY); } catch { /* ignore */ }
+}
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -63,11 +85,24 @@ export default function OnboardingPage() {
     interestedInWork: false,
     profileCompleted: false,
   });
+  const [showNotifBanner, setShowNotifBanner] = useState(false);
 
   useEffect(() => {
     const user = getUser();
     if (!user) router.push("/signup");
+
+    // Restore saved progress
+    const saved = loadOnboardingState();
+    if (saved) {
+      setStep(saved.step);
+      setProfile((p) => ({ ...p, ...saved.profile }));
+    }
   }, [router]);
+
+  // Persist step + profile on every change
+  useEffect(() => {
+    saveOnboardingState({ step, profile });
+  }, [step, profile]);
 
   const update = (key: keyof ArrivalProfile, value: unknown) =>
     setProfile((p) => ({ ...p, [key]: value }));
@@ -88,9 +123,32 @@ export default function OnboardingPage() {
       interestedInWork: profile.interestedInWork ?? false,
       profileCompleted: true,
     };
+    clearOnboardingState();
     setArrivalProfile(full);
     await new Promise((r) => setTimeout(r, 400));
+    // Show notification permission prompt only if not yet decided
+    if (
+      "Notification" in window &&
+      Notification.permission === "default"
+    ) {
+      setShowNotifBanner(true);
+      // Don't navigate yet — banner controls the final redirect
+    } else {
+      router.push("/dashboard");
+    }
+  };
+
+  const finishWithNotifs = async (permission: NotificationPermission) => {
+    try { localStorage.setItem("nsk_notification_permission", permission); } catch { /* ignore */ }
+    setShowNotifBanner(false);
+    await new Promise((r) => setTimeout(r, 200));
     router.push("/dashboard");
+  };
+
+  const requestNotifications = async () => {
+    if (!("Notification" in window)) { finishWithNotifs("denied"); return; }
+    const perm = await Notification.requestPermission();
+    finishWithNotifs(perm);
   };
 
   return (
@@ -298,6 +356,37 @@ export default function OnboardingPage() {
             </div>
           )}
         </div>
+
+        {/* Notification permission banner (QA #8) */}
+        {showNotifBanner && (
+          <div className="card bg-teal-50 border-primary/30 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
+                <span className="text-white text-sm">🔔</span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-navy">Enable task reminders?</p>
+                <p className="text-xs text-civic-600 mt-0.5">
+                  NewStart UK can notify you when tasks are due — no spam, unsubscribe anytime.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={requestNotifications}
+                className="btn-primary text-sm flex-1 justify-center"
+              >
+                Enable reminders
+              </button>
+              <button
+                onClick={() => setShowNotifBanner(false)}
+                className="btn-ghost text-sm flex-1 justify-center"
+              >
+                Not now
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex gap-3">

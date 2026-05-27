@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getUser, getArrivalProfile, getReminderPrefs, setReminderPrefs, clearAllData } from "@/lib/utils";
 import type { ReminderPrefs, ArrivalProfile } from "@/types";
-import { User, Bell, Trash2, CheckCircle, AlertCircle } from "lucide-react";
+import { User, Bell, Trash2, CheckCircle, AlertCircle, BellRing } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
 import Navigation from "@/components/Navigation";
 
@@ -15,11 +15,15 @@ export default function SettingsPage() {
   const [reminders, setReminders] = useState<ReminderPrefs>({ emailReminders: false, frequency: "weekly" });
   const [saved, setSaved] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [notifPerm, setNotifPerm] = useState<NotificationPermission>("default");
 
   useEffect(() => {
     setUser(getUser());
     setProfile(getArrivalProfile());
     setReminders(getReminderPrefs());
+    if ("Notification" in window) {
+      setNotifPerm(Notification.permission);
+    }
   }, []);
 
   const handleReminderSave = () => {
@@ -73,6 +77,64 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* Push notifications (QA #8) */}
+        <div className="card">
+          <div className="flex items-center gap-3 mb-4">
+            <BellRing className="w-5 h-5 text-primary" />
+            <h2 className="text-base font-semibold text-navy">Browser notifications</h2>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-navy">Browser push notifications</p>
+                <p className="text-xs text-muted">Get alerts for upcoming tasks in this browser</p>
+              </div>
+              <div
+                className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                  notifPerm === "granted"
+                    ? "bg-green-100 text-green-700"
+                    : notifPerm === "denied"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-amber-100 text-amber-700"
+                }`}
+              >
+                {notifPerm === "granted" ? "Enabled" : notifPerm === "denied" ? "Blocked" : "Not set"}
+              </div>
+            </div>
+            {"Notification" in window ? (
+              notifPerm === "default" ? (
+                <button
+                  onClick={async () => {
+                    const perm = await Notification.requestPermission();
+                    setNotifPerm(perm);
+                    try { localStorage.setItem("nsk_notification_permission", perm); } catch { /* ignore */ }
+                  }}
+                  className="btn-primary text-sm"
+                >
+                  Enable notifications
+                </button>
+              ) : notifPerm === "granted" ? (
+                <p className="text-xs text-muted">Notifications are enabled. To disable, revoke the permission in your browser settings for this site.</p>
+              ) : (
+                <p className="text-xs text-amber-600">
+                  Notifications are blocked.{" "}
+                  <a
+                    href="https://support.google.com/chrome/answer/3222708"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    Learn how to unblock them
+                  </a>
+                  .
+                </p>
+              )
+            ) : (
+              <p className="text-xs text-muted">Notifications are not supported in this browser.</p>
+            )}
+          </div>
+        </div>
+
         {/* Reminders */}
         <div className="card">
           <div className="flex items-center gap-3 mb-4">
@@ -116,7 +178,7 @@ export default function SettingsPage() {
             </button>
           </div>
           <div className="mt-4">
-            <Disclaimer text="Settings and preferences are stored locally on this device. Reminders are not currently sent by email." type="general" />
+            <Disclaimer text="Settings and preferences are stored locally on this device. Email reminders are not currently active. Browser notifications are optional." type="general" />
           </div>
         </div>
 
