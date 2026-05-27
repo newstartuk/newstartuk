@@ -2,6 +2,8 @@
 import Navigation from "@/components/Navigation";
 import { Building2, CreditCard, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
+import StepList from "@/components/StepList";
+import InfoCard from "@/components/InfoCard";
 
 const UK_BANKS = [
   { name: "Monzo", logo: "💳", desc: "Digital bank — easy to open, great app, no branch needed", goodFor: "Quick setup, international students, mobile-first", score: 9, url: "https://monzo.com" },
@@ -64,19 +66,9 @@ export default function BankPage() {
         </div>
 
         {/* Steps */}
-        <div className="card">
-          <h2 className="section-title">How to open your account</h2>
-          <ol className="space-y-3">
-            {STEPS.map((step, i) => (
-              <li key={i} className="flex gap-3 text-sm text-civic-700">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-teal-50 border border-teal-200 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
-                  {i + 1}
-                </span>
-                {step}
-              </li>
-            ))}
-          </ol>
-        </div>
+        <InfoCard title="How to open your account">
+          <StepList steps={STEPS} />
+        </InfoCard>
 
         {/* Recommended banks */}
         <div>

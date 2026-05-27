@@ -7,6 +7,8 @@ import { SEED_TASKS } from "@/lib/seed-data";
 import { ChevronLeft, AlertTriangle, ArrowRight } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
 import Navigation from "@/components/Navigation";
+import InfoCard from "@/components/InfoCard";
+import StepList from "@/components/StepList";
 
 export default function GuideArticlePage() {
   const params = useParams();
@@ -62,16 +64,14 @@ export default function GuideArticlePage() {
         </div>
 
         {/* What this is */}
-        <div className="card">
-          <h2 className="section-title">What this is</h2>
+        <InfoCard title="What this is">
           <p className="text-sm text-civic-700 leading-relaxed">{guide.whatThisIs}</p>
-        </div>
+        </InfoCard>
 
         {/* Why it matters */}
-        <div className="card">
-          <h2 className="section-title">Why it matters</h2>
+        <InfoCard title="Why it matters">
           <p className="text-sm text-civic-700 leading-relaxed">{guide.whyItMatters}</p>
-        </div>
+        </InfoCard>
 
         {/* What to prepare */}
         {guide.whatToPrepare.length > 0 && (
@@ -92,16 +92,7 @@ export default function GuideArticlePage() {
         {guide.stepsToTake.length > 0 && (
           <div className="card">
             <h2 className="section-title">Steps to take</h2>
-            <ol className="space-y-3">
-              {guide.stepsToTake.map((step, i) => (
-                <li key={i} className="flex gap-3 text-sm text-civic-700">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-teal-50 border border-teal-200 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
-                    {i + 1}
-                  </span>
-                  {step}
-                </li>
-              ))}
-            </ol>
+            <StepList steps={guide.stepsToTake} />
           </div>
         )}
 

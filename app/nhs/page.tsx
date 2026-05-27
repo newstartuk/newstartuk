@@ -3,6 +3,8 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Shield, Phone, MapPin, Clock, CheckCircle, AlertTriangle, ExternalLink } from "lucide-react";
 import Disclaimer from "@/components/Disclaimer";
+import StepList from "@/components/StepList";
+import InfoCard from "@/components/InfoCard";
 
 const GP_SEARCH_URL = "https://www.nhs.uk/service-search/find-a-gp";
 
@@ -31,8 +33,7 @@ export default function NHSPage() {
         </div>
 
         {/* NHS Overview */}
-        <div className="card">
-          <h2 className="section-title">How the NHS works</h2>
+        <InfoCard title="How the NHS works">
           <p className="text-sm text-civic-700 leading-relaxed mb-4">
             The <strong>NHS (National Health Service)</strong> is the UK's publicly funded healthcare system. It is one of the world's largest and most comprehensive health services, available to all UK residents — including international students — and is largely <strong>free at the point of use</strong>.
           </p>
@@ -52,7 +53,7 @@ export default function NHSPage() {
               </div>
             ))}
           </div>
-        </div>
+        </InfoCard>
 
         {/* Register with a GP */}
         <div className="card">
@@ -60,22 +61,13 @@ export default function NHSPage() {
           <p className="text-sm text-civic-700 leading-relaxed mb-4">
             A <strong>GP (General Practitioner)</strong> is your first point of contact for non-emergency health issues. You must be registered with one to book appointments, get referrals, or access prescriptions.
           </p>
-          <ol className="space-y-3 mb-4">
-            {[
-              "Find a GP near your accommodation using the NHS GP search tool",
-              "Check the GP surgery's website or call them to confirm they are accepting new patients",
-              "Fill in the GMS1 registration form (available at the surgery or online)",
-              "Provide proof of identity (passport) and proof of address (tenancy agreement or utility bill)",
-              "You will receive an NHS Number — keep this safe",
-            ].map((step, i) => (
-              <li key={i} className="flex gap-3 text-sm text-civic-700">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-teal-50 border border-teal-200 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
-                  {i + 1}
-                </span>
-                {step}
-              </li>
-            ))}
-          </ol>
+          <StepList steps={[
+            "Find a GP near your accommodation using the NHS GP search tool",
+            "Check the GP surgery's website or call them to confirm they are accepting new patients",
+            "Fill in the GMS1 registration form (available at the surgery or online)",
+            "Provide proof of identity (passport) and proof of address (tenancy agreement or utility bill)",
+            "You will receive an NHS Number — keep this safe",
+          ]} className="mb-4" />
           <a
             href={GP_SEARCH_URL}
             target="_blank"
