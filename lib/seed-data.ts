@@ -1076,7 +1076,8 @@ export const SEED_TASKS: Task[] = [
     riskWarning:
       "Job scams targeting international students are common. If an offer seems too good to be true, it is. See the Job Scam Warning guide.",
     sourceSignpost:
-      "Indeed CV templates: indeed.com | Totaljobs CV help: totaljobs.com | Action Fraud (scam reporting): actionfraud.police.uk",
+      "Indeed CV templates: indeed.com | Totaljobs CV help: totaljobs.com | Action Fraud (scam reporting): actionfraud.police.uk | Right to work checks: gov.uk/right-to-work | Student visa work conditions: gov.uk/student-visa/work",
+
   },
   {
     taskId: "STU_D30_010",

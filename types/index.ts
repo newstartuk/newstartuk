@@ -47,6 +47,8 @@ export type TaskCategory =
   | "Local Life";
 export type TaskPriority = "Very High" | "High" | "Medium" | "Low";
 export type TaskStatus = "not_started" | "in_progress" | "complete";
+export type ReviewStatus = "pending" | "reviewed" | "flagged" | "archived";
+export type EscalationFlag = "none" | "advisor" | "urgent" | "legal";
 
 export interface Task {
   taskId: string;
@@ -67,6 +69,11 @@ export interface Task {
   whyItMatters: string;
   sourceSignpost?: string;
   conditional?: string; // e.g. "Only if renting privately"
+  // v1.2 new fields
+  dependencies?: string[];          // taskIds that should be complete first
+  reminderTrigger?: string;        // e.g. "1 day before arrival date", "first day of term"
+  escalationFlag?: EscalationFlag; // flags that need human review
+  reviewStatus?: ReviewStatus;     // content review status
 }
 
 export interface UserTask {

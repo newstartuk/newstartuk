@@ -353,6 +353,22 @@ export default function OnboardingPage() {
                   <strong>I am interested in working part-time</strong> — we'll add jobs and NI number tasks to your roadmap
                 </label>
               </div>
+
+              {/* Nia introduction — shown on the final step only */}
+              <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center shrink-0">
+                    <span className="text-white text-sm">🤖</span>
+                  </div>
+                  <p className="text-sm font-semibold text-navy">Meet Nia — your AI settlement guide</p>
+                </div>
+                <p className="text-xs text-civic-600 leading-relaxed">
+                  As you work through your roadmap, you can chat with <strong>Nia</strong> — she can explain tasks, point you to official sources, and help you navigate UK daily life.
+                </p>
+                <p className="text-xs text-civic-500 leading-relaxed">
+                  <strong className="text-amber-600">Note:</strong> Nia is an AI orientation tool, not a regulated adviser. For immigration, legal, or financial advice, speak to a qualified professional.
+                </p>
+              </div>
             </div>
           )}
         </div>

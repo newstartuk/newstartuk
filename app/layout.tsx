@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Nia from "@/components/Nia";
 
 export const metadata: Metadata = {
   title: "NewStart UK — Your UK Settlement Guide",
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-background text-navy antialiased">{children}</body>
+      <body className="bg-background text-navy antialiased">
+        {children}
+        <Nia />
+      </body>
     </html>
   );
 }
